@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import Login from "./Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
-import Usuarios from "./PantallaClientes/Pages/usuarios";
+import Usuarios from "./Clients/Pages/main";
 import { Session } from "@supabase/supabase-js";
 
 function App() {
