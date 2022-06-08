@@ -4,7 +4,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
-  IdcardOutlined,
+  StarOutlined,
   PoweroffOutlined,
 } from "@ant-design/icons";
 import { NavLink, useHistory } from "react-router-dom";
@@ -18,6 +18,8 @@ interface DashboardProps {
 export default function Dashboard({ children }: DashboardProps) {
   const [collapsed, setCollapsed] = useState(false);
   const history = useHistory();
+  const fivePoints = "86eff8ab-ce82-4bd5-bf16-4b540d24d166";
+  const sweetPoint504 = "2f1f27a7-6d81-45a4-af1d-124b6ffcdb59";
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -30,14 +32,27 @@ export default function Dashboard({ children }: DashboardProps) {
           <Menu.Item key="1">
             <NavLink to={"/"}>VirtualMall</NavLink>
           </Menu.Item>
+
           <Menu.Item
             key="2"
-            icon={<UserOutlined style={{ fontSize: "16px" }} />}
+            icon={<StarOutlined  style={{ fontSize: "16px" }} />}
           >
-            <NavLink to={"/signUp"}>Registro de usuarios</NavLink>
+            <NavLink to={`/productsByBusiness/${fivePoints}`}>
+              FivePoints
+            </NavLink>
           </Menu.Item>
+
           <Menu.Item
             key="3"
+            icon={<StarOutlined style={{ fontSize: "16px" }} />}
+          >
+            <NavLink to={`/productsByBusiness/${sweetPoint504}`}>
+            TheSweetPoint504
+            </NavLink>
+          </Menu.Item>
+          
+          <Menu.Item
+            key="4"
             icon={<PoweroffOutlined style={{ fontSize: "16px" }} />}
           >
             <Button
@@ -53,7 +68,7 @@ export default function Dashboard({ children }: DashboardProps) {
         </Menu>
       </Sider>
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+        {/* <Header className="site-layout-background" style={{ padding: 0 }}>
           {React.createElement(
             collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
@@ -61,7 +76,7 @@ export default function Dashboard({ children }: DashboardProps) {
               onClick: toggle,
             }
           )}
-        </Header>
+        </Header> */}
         <Content
           className="site-layout-background"
           style={{

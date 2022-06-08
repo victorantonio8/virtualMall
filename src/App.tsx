@@ -5,7 +5,8 @@ import "antd/dist/antd.css";
 import Login from "./Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
-import Usuarios from "./Clients/Pages/main";
+import Main from "./Clients/Pages/main";
+import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
 import { Session } from "@supabase/supabase-js";
 
 function App() {
@@ -13,22 +14,25 @@ function App() {
 
   return (
     <div>
-      <Router>
-        {!user ? (
-          <Login />
-        ) : (
-          <Switch>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Dashboard>
-              <Route exact path="/">
-                <Usuarios />
+      {!user ? (
+        <Login />
+      ) : (
+        <Router>
+          <Dashboard>
+            <Switch>
+              <Route exact path="/login">
+                <Login />
               </Route>
-            </Dashboard>
-          </Switch>
-        )}
-      </Router>
+              <Route exact path="/">
+                <Main />
+              </Route>
+              <Route exact path="/productsByBusiness/:businessId/">
+                <ProductsByBusiness />
+              </Route>
+            </Switch>
+          </Dashboard>
+        </Router>
+      )}
     </div>
   );
 }

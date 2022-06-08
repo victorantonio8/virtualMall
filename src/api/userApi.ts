@@ -8,3 +8,5 @@ export async function GetUserByLogin(usuario: string, password: string) {
     .eq("password", password);
   return data ? data[0] : {};
 }
+
+

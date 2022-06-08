@@ -1,0 +1,31 @@
+.card-footer {
+    display: flex;
+    margin-top: 15px;
+    border-top: 1px solid rgba(0,0,0,.06);
+}
+
+
+
+.card-footer > div {
+    width: 33.33%;
+    padding: 15px;
+    text-align: center;
+
+    border-right: 1px solid rgba(0,0,0,.06);
+}
+
+.card-footer > div:last-child {
+    border: 0;
+}
+
+.card-footer span {
+    display: block;
+}
+
+.product-card .ant-card-cover {
+    flex: 0 1 auto;
+}
+
+.product-card .ant-card-body {
+    flex: 1 1 auto;
+}
