@@ -11,7 +11,7 @@
     "@types/jest": "^26.0.24",
     "@types/node": "^12.20.36",
     "@types/react-native": "^0.67.8",
-    "antd": "^4.16.13",
+    "antd": "^4.21.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.1",

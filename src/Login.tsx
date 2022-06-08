@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabaseClient } from "./supabaseClient";
 import { Card, Form, Input, Button, message } from "antd";
-import { Usuarios } from "./Clients/Models/usuariosModels";
+import { Usuarios } from "./Clients/Models/usuariosModel";
 import { GetUserByLogin } from "./api/userApi";
 import { Session } from "@supabase/supabase-js";
 import { useHistory } from "react-router-dom";
