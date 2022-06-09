@@ -1,10 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useInsertionEffect } from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { Avatar, Card, Collapse } from "antd";
+import { Avatar, Card, Collapse, InputNumber, message } from "antd";
 import { useState } from "react";
-import { getProductsByBusiness } from "../../api/productsApi";
+import {
+  addProductsToCart,
+  getProductInCartByUser,
+  getProductsByBusiness,
+} from "../../api/productsApi";
 import { Product } from "../Models/productModel";
 import { useParams, useHistory } from "react-router-dom";
+import { cars } from "../Models/carsModel";
 
 interface businessIdParams {
   businessId: string;
@@ -12,9 +17,12 @@ interface businessIdParams {
 
 export default function ProductsByBusiness() {
   const [products, setProducts] = useState<any[] | null>();
+  const [carproduct, setCarProduct] = useState<number>(0);
   const { businessId } = useParams<businessIdParams>();
   const { Meta } = Card;
   const { Panel } = Collapse;
+  const _usuarioId = localStorage.getItem("myUser");
+  let _quantity = 0;
   const history = useHistory();
 
   useEffect(() => {
@@ -23,29 +31,65 @@ export default function ProductsByBusiness() {
     });
   }, [businessId]);
 
+  useEffect(() => {
+    getProductInCartByUser(_usuarioId as string).then((data: number) => {
+      setCarProduct(data);
+    });
+  }, [carproduct]);
+
   const handleClick = (param: any) => {
     if (param) {
       history.push(`/detailProductById/${param}`);
     }
   };
 
+  const onChange = (value: number) => {
+    _quantity = value;
+  };
+
+  const onclickAddCart = async (values: any) => {
+    if (_quantity === undefined || _quantity === 0) {
+      message.info("la cantidad debe ser mayor a 0");
+      return;
+    }
+
+    const _cars = {
+      quantity: _quantity,
+      idProduct: values["id"],
+      usuarioId: _usuarioId,
+    } as cars;
+
+    addProductsToCart(_cars as any).then((result: any) => {
+      message.success("Producto agregado al carrito");
+      setCarProduct(carproduct + _quantity);
+    });
+  };
+
   return (
     <>
       {products && (
         <div>
-          <div style={{display:"flex", justifyContent:"end"}}>
-            <div style={{ display:"inline-flex", alignItems:"center" }}>
-              <strong style={{ fontSize: 22 }}>5</strong>
+          <div style={{ display: "flex", justifyContent: "end" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                height: "50px",
+                backgroundColor: "deepSkyBlue",
+              }}
+            >
+              <strong style={{ fontSize: 22 }}>{carproduct}</strong>
 
               <span>
                 <Avatar
                   size={64}
+                  shape="square"
                   style={{
                     verticalAlign: "middle",
                     backgroundColor: "transparent",
                     color: "black",
-                    height: "auto",
-                    width: "auto",
+                    height: "60px",
+                    width: "35px",
                   }}
                   icon={<ShoppingCartOutlined />}
                 />
@@ -109,18 +153,33 @@ export default function ProductsByBusiness() {
                             <span>{data.stock}</span>
                           </div>
                           <div>
-                            <strong>Add</strong>
+                            <strong>
+                              <InputNumber
+                                style={{ width: "65px" }}
+                                min={0}
+                                max={data.stock}
+                                defaultValue={0}
+                                id={"inputQuantity"}
+                                onChange={onChange}
+                              />
+                            </strong>
+
                             <span>
                               <Avatar
                                 shape="square"
                                 size={64}
                                 style={{
                                   verticalAlign: "middle",
-                                  backgroundColor: "darkgrey",
+                                  backgroundColor: "deepskyblue",
                                   color: "black",
+                                  width: "65px",
                                   height: "auto",
                                 }}
-                                icon={<ShoppingCartOutlined />}
+                                icon={
+                                  <ShoppingCartOutlined
+                                    onClick={(event) => onclickAddCart(data)}
+                                  />
+                                }
                               />
                             </span>
                           </div>

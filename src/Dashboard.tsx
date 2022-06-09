@@ -4,6 +4,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
+  PicCenterOutlined,
   StarOutlined,
   PoweroffOutlined,
 } from "@ant-design/icons";
@@ -19,7 +20,7 @@ export default function Dashboard({ children }: DashboardProps) {
   const [collapsed, setCollapsed] = useState(false);
   const history = useHistory();
   const fivePoints = "86eff8ab-ce82-4bd5-bf16-4b540d24d166";
-  const sweetPoint504 = "2f1f27a7-6d81-45a4-af1d-124b6ffcdb59";
+  const sweetPoint504 = "b26a47be-fdad-42fd-81f6-c56a561d7596";
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -53,11 +54,9 @@ export default function Dashboard({ children }: DashboardProps) {
 
           <Menu.Item
             key="4"
-            icon={<StarOutlined style={{ fontSize: "16px" }} />}
+            icon={<PicCenterOutlined style={{ fontSize: "16px" }} />}
           >
-            <NavLink to={"/newsByBusiness"}>
-              Noticias
-            </NavLink>
+            <NavLink to={"/newsByBusiness"}>Noticias</NavLink>
           </Menu.Item>
 
           <Menu.Item
