@@ -8,6 +8,7 @@ import Dashboard from "./Dashboard";
 import Main from "./Clients/Pages/main";
 import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
 import DetailProductById from "./Clients/Pages/detailProductById";
+import NewsByBusiness from "./Clients/Pages/newsByBusiness";
 import { Session } from "@supabase/supabase-js";
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
               </Route>
               <Route exact path="/detailProductById/:productId/">
                 <DetailProductById />
+              </Route>
+              <Route exact path="/newsByBusiness">
+                <NewsByBusiness />
               </Route>
             </Switch>
           </Dashboard>

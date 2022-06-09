@@ -53,6 +53,15 @@ export default function Dashboard({ children }: DashboardProps) {
 
           <Menu.Item
             key="4"
+            icon={<StarOutlined style={{ fontSize: "16px" }} />}
+          >
+            <NavLink to={"/newsByBusiness"}>
+              Noticias
+            </NavLink>
+          </Menu.Item>
+
+          <Menu.Item
+            key="5"
             icon={<PoweroffOutlined style={{ fontSize: "16px" }} />}
           >
             <Button
