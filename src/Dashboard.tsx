@@ -35,7 +35,7 @@ export default function Dashboard({ children }: DashboardProps) {
 
           <Menu.Item
             key="2"
-            icon={<StarOutlined  style={{ fontSize: "16px" }} />}
+            icon={<StarOutlined style={{ fontSize: "16px" }} />}
           >
             <NavLink to={`/productsByBusiness/${fivePoints}`}>
               FivePoints
@@ -47,10 +47,10 @@ export default function Dashboard({ children }: DashboardProps) {
             icon={<StarOutlined style={{ fontSize: "16px" }} />}
           >
             <NavLink to={`/productsByBusiness/${sweetPoint504}`}>
-            TheSweetPoint504
+              TheSweetPoint504
             </NavLink>
           </Menu.Item>
-          
+
           <Menu.Item
             key="4"
             icon={<PoweroffOutlined style={{ fontSize: "16px" }} />}
@@ -80,7 +80,7 @@ export default function Dashboard({ children }: DashboardProps) {
         <Content
           className="site-layout-background"
           style={{
-            margin: "24px 16px",
+            margin: "0px 16px",
             padding: 24,
             minHeight: 280,
           }}

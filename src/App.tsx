@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Main from "./Clients/Pages/main";
 import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
+import DetailProductById from "./Clients/Pages/detailProductById";
 import { Session } from "@supabase/supabase-js";
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
               </Route>
               <Route exact path="/productsByBusiness/:businessId/">
                 <ProductsByBusiness />
+              </Route>
+              <Route exact path="/detailProductById/:productId/">
+                <DetailProductById />
               </Route>
             </Switch>
           </Dashboard>

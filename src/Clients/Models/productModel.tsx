@@ -1,4 +1,4 @@
-export interface products {
+export interface Product {
   id: string;
   name: string;
   urlPicture: string;
@@ -8,4 +8,5 @@ export interface products {
   price: number;
   idCategory: string;
   idBusiness: string;
+  comments?: Comment;
 }

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Avatar, Card, Collapse } from "antd";
 import { useState } from "react";
-import { getProducts } from "../../api/productsApi";
-import { products } from "../Models/productsModel";
-import { useParams } from "react-router-dom";
+import { getProductsByBusiness } from "../../api/productsApi";
+import { Product } from "../Models/productModel";
+import { useParams, useHistory } from "react-router-dom";
 
 interface businessIdParams {
   businessId: string;
@@ -15,22 +15,51 @@ export default function ProductsByBusiness() {
   const { businessId } = useParams<businessIdParams>();
   const { Meta } = Card;
   const { Panel } = Collapse;
+  const history = useHistory();
 
   useEffect(() => {
-    getProducts(businessId).then((data) => {
-      setProducts(data as products[]);
+    getProductsByBusiness(businessId).then((data) => {
+      setProducts(data as Product[]);
     });
   }, [businessId]);
+
+  const handleClick = (param: any) => {
+    if (param) {
+      history.push(`/detailProductById/${param}`);
+    }
+  };
 
   return (
     <>
       {products && (
-        
         <div>
-      
-          {products.map((category) => (
+          <div style={{display:"flex", justifyContent:"end"}}>
+            <div style={{ display:"inline-flex", alignItems:"center" }}>
+              <strong style={{ fontSize: 22 }}>5</strong>
+
+              <span>
+                <Avatar
+                  size={64}
+                  style={{
+                    verticalAlign: "middle",
+                    backgroundColor: "transparent",
+                    color: "black",
+                    height: "auto",
+                    width: "auto",
+                  }}
+                  icon={<ShoppingCartOutlined />}
+                />
+              </span>
+            </div>
+          </div>
+
+          {products.map((category, index) => (
             <Collapse bordered={false} key={category.id} defaultActiveKey={[0]}>
-              <Panel header={category.name} style={{fontWeight:"bold"}} key={category.id}>
+              <Panel
+                header={category.name}
+                style={{ fontWeight: "bold" }}
+                key={index}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -40,7 +69,7 @@ export default function ProductsByBusiness() {
                     margin: "0 auto",
                   }}
                 >
-                  {category.products.map((data:products) => (
+                  {category.products.map((data: Product) => (
                     <Card
                       style={{
                         width: 300,
@@ -50,7 +79,13 @@ export default function ProductsByBusiness() {
                       }}
                       className="product-card"
                       key={data.id}
-                      cover={<img alt="example" src={data.urlPicture} />}
+                      cover={
+                        <img
+                          alt="example"
+                          onClick={(event) => handleClick(data.id)}
+                          src={data.urlPicture}
+                        />
+                      }
                     >
                       <div
                         style={{
@@ -70,7 +105,7 @@ export default function ProductsByBusiness() {
                             <span>{data.price}</span>
                           </div>
                           <div>
-                            <strong>in Stock</strong>
+                            <strong>Stock</strong>
                             <span>{data.stock}</span>
                           </div>
                           <div>
