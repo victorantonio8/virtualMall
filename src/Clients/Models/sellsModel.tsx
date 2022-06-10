@@ -5,5 +5,5 @@ export interface sells {
   quantity: number;
   total: number;
   idProduct: string;
-  idBusiness: string;
+  usuarioId: string;
 }

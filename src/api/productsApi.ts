@@ -2,6 +2,7 @@ import { supabaseClient } from "../supabaseClient";
 import { Product } from '../Clients/Models/productModel';
 import { Comment } from 'antd';
 import { cars } from "../Clients/Models/carsModel";
+import { sells } from "../Clients/Models/sellsModel";
 
 
 export async function getProductsByBusiness(businessId: string)
@@ -46,6 +47,7 @@ export async function getProductById(productId: string): Promise<Product | null>
                       id,
                       description,
                       stars,
+                      created_at,
                       usuarios(
                           id,
                           nombres
@@ -115,3 +117,30 @@ export async function addComments(comment: Comment) {
     }
     return result;
 }
+
+export async function getProductToBuy(usuarioId: string)
+{
+    const {data, error} = await supabaseClient
+    .rpc('get_products_to_buy', { '_usuarioid': usuarioId });
+    let result = 0;
+    if (data) {
+        result = data as any;
+    }
+
+    return result;
+}
+
+
+export async function addSellByUser(product:sells) {
+    debugger;
+    const { data, error } = await supabaseClient
+    .from("sells")
+    .insert(product);
+
+    await supabaseClient
+    .from("cars")
+    .delete()
+    .match({idProduct:product.idProduct,usuarioId: product.usuarioId})
+    
+    return data;
+  }

@@ -8,7 +8,7 @@ import {
   getProductsByBusiness,
 } from "../../api/productsApi";
 import { Product } from "../Models/productModel";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, NavLink } from "react-router-dom";
 import { cars } from "../Models/carsModel";
 
 interface businessIdParams {
@@ -65,6 +65,9 @@ export default function ProductsByBusiness() {
     });
   };
 
+  const onClickBuy = async () => {
+    history.push("/productsToBuy");
+  };
   return (
     <>
       {products && (
@@ -91,7 +94,7 @@ export default function ProductsByBusiness() {
                     height: "60px",
                     width: "35px",
                   }}
-                  icon={<ShoppingCartOutlined />}
+                  icon={<ShoppingCartOutlined onClick={onClickBuy} />}
                 />
               </span>
             </div>

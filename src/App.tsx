@@ -9,7 +9,7 @@ import Main from "./Clients/Pages/main";
 import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
 import DetailProductById from "./Clients/Pages/detailProductById";
 import NewsByBusiness from "./Clients/Pages/newsByBusiness";
-import { Session } from "@supabase/supabase-js";
+import ProductsToBuy from "./Clients/Pages/productsToBuy";
 
 function App() {
   const user = localStorage.getItem("myUser");
@@ -36,6 +36,9 @@ function App() {
               </Route>
               <Route exact path="/newsByBusiness">
                 <NewsByBusiness />
+              </Route>
+              <Route exact path="/productsToBuy">
+                <ProductsToBuy />
               </Route>
             </Switch>
           </Dashboard>

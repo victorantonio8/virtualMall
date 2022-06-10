@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Product } from "../Models/productModel";
 import {
   Image,
-  Layout,
   Descriptions,
   Tooltip,
   Form,
@@ -33,6 +32,7 @@ export default function DetailProductById() {
 
   useEffect(() => {
     getProductById(productId).then((data) => {
+      debugger;
       setProduct(data);
     });
   }, [productId]);
@@ -52,8 +52,9 @@ export default function DetailProductById() {
     addComments(_comment as any).then((result: any) => {
       message.success("El comentario ha sido agregado correctamente");
       onReset();
-      //console.log();
-      //setProduct(productId as any);
+      const productUpdated = { ...product } as Product;
+      productUpdated.comments = [...(productUpdated?.comments ?? []), _comment];
+      setProduct(productUpdated);
     });
   };
 
@@ -175,17 +176,17 @@ export default function DetailProductById() {
                     </Form>
 
                     {Array.isArray(product.comments) &&
-                      product.comments.map((comments: CommentModel, index) => (
+                      product.comments.map((comment, index: number) => (
                         <Comment
                           key={index}
-                          author={comments.usuarios?.nombres}
-                          content={comments.description}
+                          author={comment.usuarios?.nombres}
+                          content={comment.description}
                           datetime={
                             <Tooltip
                               title={moment().format("YYYY-MM-DD HH:mm:ss")}
                             >
                               <span>
-                                {moment(comments.created_at).format(
+                                {moment(comment.created_at).format(
                                   "YYYY-MM-DD HH:mm:ss"
                                 )}
                               </span>

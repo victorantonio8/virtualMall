@@ -1,3 +1,5 @@
+import { Comment } from "./commentModel";
+
 export interface Product {
   id: string;
   name: string;
@@ -8,5 +10,5 @@ export interface Product {
   price: number;
   idCategory: string;
   idBusiness: string;
-  comments?: Comment;
+  comments?: Comment[];
 }
