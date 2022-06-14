@@ -10,36 +10,32 @@ import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
 import DetailProductById from "./Clients/Pages/detailProductById";
 import NewsByBusiness from "./Clients/Pages/newsByBusiness";
 import ProductsToBuy from "./Clients/Pages/productsToBuy";
+import PrivateRoute from "./Clients/Pages/PrivateRoute";
 
 function App() {
-  const user = localStorage.getItem("myUser");
-
   return (
     <>
       <Router>
-        {!user ? (
-          <Login />
-        ) : (
-          <Dashboard>
-            <Switch>
-              <Route exact path="/">
-                <Main />
-              </Route>
-              <Route exact path="/productsByBusiness/:businessId/">
-                <ProductsByBusiness />
-              </Route>
-              <Route exact path="/detailProductById/:productId/">
-                <DetailProductById />
-              </Route>
-              <Route exact path="/newsByBusiness">
-                <NewsByBusiness />
-              </Route>
-              <Route exact path="/productsToBuy">
-                <ProductsToBuy />
-              </Route>
-            </Switch>
-          </Dashboard>
-        )}
+        <Switch>
+          <Route exact path={"/login"}>
+            <Login />
+          </Route>
+          <PrivateRoute exact path="/">
+            <Main />
+          </PrivateRoute>
+          <PrivateRoute exact path="/productsByBusiness/:businessId/">
+            <ProductsByBusiness />
+          </PrivateRoute>
+          <PrivateRoute exact path="/detailProductById/:productId/">
+            <DetailProductById />
+          </PrivateRoute>
+          <PrivateRoute exact path="/newsByBusiness">
+            <NewsByBusiness />
+          </PrivateRoute>
+          <PrivateRoute exact path="/productsToBuy">
+            <ProductsToBuy />
+          </PrivateRoute>
+        </Switch>
       </Router>
     </>
   );
