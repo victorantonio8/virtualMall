@@ -16,12 +16,15 @@ export async function getProductsByBusiness(businessId: string)
                 id,
                 name,
                 urlPicture,
+                urlPictureSide,
+                urlPictureBack,
                 shortDescription,
                 longDescription,
                 stock,
                 price,
                 idCategory,
-                idBusiness
+                idBusiness,
+                sizes
             )
         `)
         .eq("idBusiness", businessId)
@@ -37,12 +40,15 @@ export async function getProductById(productId: string): Promise<Product | null>
                     id,
                     name,
                     urlPicture,
+                    urlPictureSide,
+                    urlPictureBack,
                     shortDescription,
                     longDescription,
                     stock,
                     price,
                     idCategory,
                     idBusiness,
+                    sizes,
                     comments(
                       id,
                       description,
@@ -71,12 +77,6 @@ export async function addComments(comment: Comment) {
   }
 
 
-  export async function addProductsToCartv2(cars: cars) {
-    const { data, error } = await supabaseClient
-    .from("cars")
-    .insert(cars);
-    return data;
-  }
 
   export async function addProductsToCart(cars: cars) {
     let oldQuantity=0;
@@ -132,15 +132,52 @@ export async function getProductToBuy(usuarioId: string)
 
 
 export async function addSellByUser(product:sells) {
-    debugger;
-    const { data, error } = await supabaseClient
+    // capturamos la cantidad que compra el usuario
+    let quantity= 0
+    quantity = product.quantity;
+
+    // traemos el stock en existencia del producto
+    let oldStock=0;
+    const {data, error} = await supabaseClient
+    .from("products")
+        .select('stock')
+        .match({id:product.idProduct})
+
+    if(data?.length !== 0){
+        const result = data?data[0].stock:0;
+        oldStock = result as number;     
+    }
+
+    //insertamos los productos ya en ventas
+    await supabaseClient
     .from("sells")
     .insert(product);
 
+    // eliminamos los productos del carrito
     await supabaseClient
     .from("cars")
     .delete()
     .match({idProduct:product.idProduct,usuarioId: product.usuarioId})
+
+    // actualizamos el nuevo stock de los productos, restando el oldStock - quantity
+    let newStock = 0;
+    newStock = oldStock - quantity;
+    await supabaseClient
+    .from('products')
+    .update({ stock : newStock })
+    .match({ id: product.idProduct})
     
+    return data;
+  }
+
+  export async function deleteProductsInCart(_idProduct:string, _idUsuario:string)
+  {
+    await supabaseClient
+    .from("cars")
+    .delete()
+    .match({idProduct:_idProduct,usuarioId:_idUsuario})
+
+    const {data, error} = await supabaseClient
+    .rpc('get_products_to_buy', { '_usuarioid': _idUsuario });
     return data;
   }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addSellByUser, getProductToBuy } from "../../api/productsApi";
+import { addSellByUser, deleteProductsInCart, getProductToBuy } from "../../api/productsApi";
 import {
   Image,
   Descriptions,
@@ -49,10 +49,8 @@ export default function ProductsToBuy() {
 
   const handleOk = async (values: any) => {
     setIsModalVisible(false);
-    console.log(values);
 
     values.forEach((result: any) => {
-      
       const _cart = {
         productName: result["productname"],
         price: result["price"],
@@ -65,11 +63,27 @@ export default function ProductsToBuy() {
       addSellByUser(_cart as sells).then((data) => {});
     });
     message.success("El pago fue hecho exitosamente");
-    history.push("/productsByBusiness/86eff8ab-ce82-4bd5-bf16-4b540d24d166");
+    history.push("/");
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const onDeleteProduct = (values: any) => {
+    const idProduct = values["idproduct"];
+    const usuarioId = values["usuarioid"];
+
+    deleteProductsInCart(idProduct,usuarioId).then((data) => {
+      message.success("Producto eliminado del carrito exitosamente");
+      setProducts(data);
+
+      data?.forEach((result: any) => {
+        totalPagar += result.total;
+      });
+      setPagar(totalPagar);
+    });
+
   };
 
   return (
@@ -127,6 +141,9 @@ export default function ProductsToBuy() {
                             }}
                             shape="round"
                             icon={<DeleteOutlined />}
+                            onClick={(event) => {
+                              onDeleteProduct(products);
+                            }}
                           >
                             Eliminar
                           </Button>

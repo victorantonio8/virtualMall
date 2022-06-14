@@ -23,7 +23,7 @@ export default function Usuarios() {
     <>
       {usuarios && (
         <div>
-          <h2>Bienvenido al virtualMall</h2>
+          <h2>Bienvenido a virtualMall</h2>
         </div>
       )}
     </>

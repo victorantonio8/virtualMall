@@ -22,6 +22,14 @@
     display: block;
 }
 
+.card-footerv2 {
+    display: flex;
+    margin-top: 15px;
+
+}
+
+
+
 .product-card .ant-card-cover {
     flex: 0 1 auto;
 }

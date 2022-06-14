@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   message,
+  Tabs,
 } from "antd";
 import moment from "moment";
 import { getProductById } from "../../api/productsApi";
@@ -28,11 +29,11 @@ export default function DetailProductById() {
   const { productId } = useParams<productIdParams>();
   const [product, setProduct] = useState<Product | null>();
   const [visible, setVisible] = useState(false);
+  const { TabPane } = Tabs;
   const [form] = Form.useForm();
 
   useEffect(() => {
     getProductById(productId).then((data) => {
-      debugger;
       setProduct(data);
     });
   }, [productId]);
@@ -74,19 +75,53 @@ export default function DetailProductById() {
           <div>
             <Row>
               <Col span={8}>
-                <Image
-                  width={450}
-                  key={product.id}
-                  src={product.urlPicture}
-                  preview={{
-                    visible,
-                    src: product.urlPicture,
-                    onVisibleChange: (value) => {
-                      setVisible(value);
-                    },
-                  }}
-                  onClick={() => setVisible(true)}
-                />
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab="Front" key="1">
+                    <Image
+                      width={450}
+                      key={product.id}
+                      src={product.urlPicture}
+                      preview={{
+                        visible,
+                        src: product.urlPicture,
+                        onVisibleChange: (value) => {
+                          setVisible(value);
+                        },
+                      }}
+                      onClick={() => setVisible(true)}
+                    />
+                  </TabPane>
+                  <TabPane tab="Back" key="2">
+                    <Image
+                      width={450}
+                      key={product.id}
+                      src={product.urlPictureBack}
+                      preview={{
+                        visible,
+                        src: product.urlPictureBack,
+                        onVisibleChange: (value) => {
+                          setVisible(value);
+                        },
+                      }}
+                      onClick={() => setVisible(true)}
+                    />
+                  </TabPane>
+                  <TabPane tab="Side" key="3">
+                    <Image
+                      width={450}
+                      key={product.id}
+                      src={product.urlPictureSide}
+                      preview={{
+                        visible,
+                        src: product.urlPictureSide,
+                        onVisibleChange: (value) => {
+                          setVisible(value);
+                        },
+                      }}
+                      onClick={() => setVisible(true)}
+                    />
+                  </TabPane>
+                </Tabs>
               </Col>
               <Col span={16}>
                 <div>

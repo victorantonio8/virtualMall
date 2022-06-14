@@ -15,16 +15,13 @@ function App() {
   const user = localStorage.getItem("myUser");
 
   return (
-    <div>
-      {!user ? (
-        <Login />
-      ) : (
-        <Router>
+    <>
+      <Router>
+        {!user ? (
+          <Login />
+        ) : (
           <Dashboard>
             <Switch>
-              <Route exact path="/login">
-                <Login />
-              </Route>
               <Route exact path="/">
                 <Main />
               </Route>
@@ -42,9 +39,9 @@ function App() {
               </Route>
             </Switch>
           </Dashboard>
-        </Router>
-      )}
-    </div>
+        )}
+      </Router>
+    </>
   );
 }
 

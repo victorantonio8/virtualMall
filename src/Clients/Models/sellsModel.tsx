@@ -6,4 +6,6 @@ export interface sells {
   total: number;
   idProduct: string;
   usuarioId: string;
+  size: string;
+  observations:string;
 }

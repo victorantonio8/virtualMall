@@ -1,6 +1,18 @@
-import React, { useEffect, useInsertionEffect } from "react";
+import { useEffect } from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { Avatar, Card, Collapse, InputNumber, message } from "antd";
+import {
+  Avatar,
+  Card,
+  Collapse,
+  InputNumber,
+  message,
+  Select,
+  Checkbox,
+  Button,
+  Modal,
+  Input,
+} from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useState } from "react";
 import {
   addProductsToCart,
@@ -8,7 +20,7 @@ import {
   getProductsByBusiness,
 } from "../../api/productsApi";
 import { Product } from "../Models/productModel";
-import { useParams, useHistory, NavLink } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { cars } from "../Models/carsModel";
 
 interface businessIdParams {
@@ -22,8 +34,15 @@ export default function ProductsByBusiness() {
   const { Meta } = Card;
   const { Panel } = Collapse;
   const _usuarioId = localStorage.getItem("myUser");
-  let _quantity = 0;
+
+  const [quantity, setQuantity] = useState<number>(0);
+  const [personalizacion, setPersonalizacion] = useState<string>("");
+  const [size, setSize] = useState<string>("");
   const history = useHistory();
+  const { Option } = Select;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [personalize, setPersonalize] = useState<boolean>(false);
+  const [selectedProductId, setSelectedProductId] = useState("");
 
   useEffect(() => {
     getProductsByBusiness(businessId).then((data) => {
@@ -43,29 +62,59 @@ export default function ProductsByBusiness() {
     }
   };
 
-  const onChange = (value: number) => {
-    _quantity = value;
+  const onChangeQuantity = (value: number) => {
+    setQuantity(value);
   };
 
-  const onclickAddCart = async (values: any) => {
-    if (_quantity === undefined || _quantity === 0) {
+  const onChangeInputPersonalizar = (value: any) => {
+    console.log(value.target.value);
+    setPersonalizacion(value.target.value);
+  };
+
+  const onChangeSize = (value: string) => {
+    setSize(value);
+  };
+
+  const onChangePersonalizar = (e: CheckboxChangeEvent) => {
+    setPersonalize(e.target.checked);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const onclickAddCart = (id: string) => {
+    if (quantity === undefined || quantity === 0) {
       message.info("la cantidad debe ser mayor a 0");
       return;
     }
 
+    if (size === undefined || size === "") {
+      message.info("debe seleccionar la talla");
+      return;
+    }
+    debugger;
+
     const _cars = {
-      quantity: _quantity,
-      idProduct: values["id"],
+      quantity: quantity,
+      idProduct: id,
       usuarioId: _usuarioId,
+      size: size,
+      observations: personalizacion,
     } as cars;
 
     addProductsToCart(_cars as any).then((result: any) => {
       message.success("Producto agregado al carrito");
-      setCarProduct(carproduct + _quantity);
+      setIsModalVisible(false);
+      setCarProduct(carproduct + quantity);
     });
   };
 
-  const onClickBuy = async () => {
+  const onClickBuy = () => {
     history.push("/productsToBuy");
   };
   return (
@@ -116,7 +165,7 @@ export default function ProductsByBusiness() {
                     margin: "0 auto",
                   }}
                 >
-                  {category.products.map((data: Product) => (
+                  {category.products.map((product: Product) => (
                     <Card
                       style={{
                         width: 300,
@@ -125,12 +174,12 @@ export default function ProductsByBusiness() {
                         flexDirection: "column",
                       }}
                       className="product-card"
-                      key={data.id}
+                      key={product.id}
                       cover={
                         <img
                           alt="example"
-                          onClick={(event) => handleClick(data.id)}
-                          src={data.urlPicture}
+                          onClick={(event) => handleClick(product.id)}
+                          src={product.urlPicture}
                         />
                       }
                     >
@@ -143,49 +192,88 @@ export default function ProductsByBusiness() {
                         }}
                       >
                         <Meta
-                          title={data.name}
-                          description={data.shortDescription}
+                          title={product.name}
+                          description={product.shortDescription}
                         />
+
                         <div className="card-footer">
                           <div>
                             <strong>Price</strong>
-                            <span>{data.price}</span>
+                            <span>{product.price}</span>
                           </div>
                           <div>
                             <strong>Stock</strong>
-                            <span>{data.stock}</span>
+                            <span>{product.stock}</span>
                           </div>
                           <div>
-                            <strong>
-                              <InputNumber
-                                style={{ width: "65px" }}
-                                min={0}
-                                max={data.stock}
-                                defaultValue={0}
-                                id={"inputQuantity"}
-                                onChange={onChange}
-                              />
-                            </strong>
-
-                            <span>
-                              <Avatar
-                                shape="square"
-                                size={64}
-                                style={{
-                                  verticalAlign: "middle",
-                                  backgroundColor: "deepskyblue",
-                                  color: "black",
-                                  width: "65px",
-                                  height: "auto",
-                                }}
-                                icon={
-                                  <ShoppingCartOutlined
-                                    onClick={(event) => onclickAddCart(data)}
-                                  />
-                                }
-                              />
+                            <strong>Size</strong>
+                            <span style={{ display: "block" }}>
+                              <Select
+                                showSearch
+                                optionFilterProp="children"
+                                onChange={onChangeSize}
+                                style={{ width: "70px" }}
+                              >
+                                {Array.isArray(product.sizes) &&
+                                  product.sizes.map((sizes, index: number) => (
+                                    <Option key={index} value={sizes}>
+                                      {sizes}
+                                    </Option>
+                                  ))}
+                              </Select>
                             </span>
                           </div>
+                        </div>
+                        <div>
+                          <span>
+                            <Checkbox onChange={onChangePersonalizar}>
+                              Personalizar
+                            </Checkbox>
+                          </span>
+                          <span style={{ paddingLeft: "15px" }}>
+                            <InputNumber
+                              style={{ width: "65px" }}
+                              min={0}
+                              max={product.stock}
+                              defaultValue={0}
+                              id={"inputQuantity"}
+                              onChange={onChangeQuantity}
+                            />
+                          </span>
+                          <span style={{ paddingLeft: "5px" }}>
+                            <Button
+                              type="primary"
+                              style={{ width: "40px", height: "36px" }}
+                              icon={
+                                <ShoppingCartOutlined
+                                  onClick={() => {
+                                    setSelectedProductId(product.id);
+                                    if (personalize) {
+                                      showModal();
+                                    } else {
+                                      onclickAddCart(product.id);
+                                    }
+                                  }}
+                                />
+                              }
+                            ></Button>
+                            <Modal
+                              title="Personalización Gratis"
+                              visible={isModalVisible}
+                              onOk={() => onclickAddCart(selectedProductId)}
+                              onCancel={handleCancel}
+                            >
+                              <p>
+                                Ejemplo: Real Madrid - Talla S - Victor Mendez
+                                #10
+                              </p>
+                              <Input
+                                onChange={onChangeInputPersonalizar}
+                                id={"inputPersonalizar"}
+                                placeholder="Camisa - Talla - Nombre"
+                              />
+                            </Modal>
+                          </span>
                         </div>
                       </div>
                     </Card>

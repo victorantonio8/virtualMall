@@ -4,4 +4,6 @@ export interface cars
     quantity: number;
     idProduct: string;
     usuarioId:string;
+    size:string;
+    observations:string;
 }
