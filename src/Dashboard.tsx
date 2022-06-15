@@ -75,7 +75,7 @@ export default function Dashboard({ children }: DashboardProps) {
       },
     ];
 
-    if (isAdmin) {
+    if (isAdmin === "true") {
       menuItems = [
         {
           key: "Home",
