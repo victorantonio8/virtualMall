@@ -6,7 +6,6 @@ import { GetUserByLogin } from "./api/userApi";
 import { Session } from "@supabase/supabase-js";
 import { useHistory } from "react-router-dom";
 
-
 export default function Login() {
   const history = useHistory();
   const [usuario, setUsuario] = useState<Usuarios>();
@@ -17,8 +16,9 @@ export default function Login() {
       GetUserByLogin(usuario, password).then((respone) => {
         if (respone) {
           localStorage.setItem("myUser", respone.id);
+          localStorage.setItem("isAdmin", respone.isAdmin);
           setUsuario(respone.data);
-          history.push('/');
+          history.push("/");
           message.success("ha iniciado sesion correctamente.");
         } else {
           message.error("usuario o contraseña incorrecta.");

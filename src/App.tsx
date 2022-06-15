@@ -4,7 +4,6 @@ import "./App.css";
 import "antd/dist/antd.css";
 import Login from "./Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Dashboard from "./Dashboard";
 import Main from "./Clients/Pages/main";
 import ProductsByBusiness from "./Clients/Pages/productsByBusiness";
 import DetailProductById from "./Clients/Pages/detailProductById";
