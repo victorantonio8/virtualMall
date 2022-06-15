@@ -17,6 +17,7 @@ export default function Login() {
         if (respone) {
           localStorage.setItem("myUser", respone.id);
           localStorage.setItem("isAdmin", respone.isAdmin);
+          localStorage.setItem("idBusiness", respone.idBusiness);
           setUsuario(respone.data);
           history.push("/");
           message.success("ha iniciado sesion correctamente.");

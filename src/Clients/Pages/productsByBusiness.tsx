@@ -97,7 +97,6 @@ export default function ProductsByBusiness() {
       message.info("debe seleccionar la talla");
       return;
     }
-    debugger;
 
     const _cars = {
       quantity: quantity,
