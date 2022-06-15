@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import Dashboard from "../../Dashboard";
 
 const PrivateRoute = ({ children, path }: any) => {

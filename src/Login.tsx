@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { supabaseClient } from "./supabaseClient";
+import { useState } from "react";
 import { Card, Form, Input, Button, message, Image } from "antd";
 import { Usuarios } from "./Clients/Models/usuariosModel";
 import { GetUserByLogin } from "./api/userApi";
-import { Session } from "@supabase/supabase-js";
 import { useHistory } from "react-router-dom";
-import { Comment } from "./Clients/Models/commentModel";
 
 export default function Login() {
   const history = useHistory();
   const [usuario, setUsuario] = useState<Usuarios>();
-  const [session, setSession] = useState<Session | null>(null);
-  const { Meta } = Card;
 
   const onFinish = async ({ usuario, password }: Usuarios) => {
     try {
       GetUserByLogin(usuario, password).then((respone) => {
         if (respone) {
           localStorage.setItem("myUser", respone.id);
+          localStorage.setItem("isAdmin", respone.isAdmin);
+          localStorage.setItem("idBusiness", respone.idBusiness);
           setUsuario(respone.data);
           history.push("/");
           message.success("ha iniciado sesion correctamente.");
@@ -85,13 +82,12 @@ export default function Login() {
               rules={[
                 { required: true, message: "Please input your password!" },
               ]}
-              
             >
-              <Input.Password  />
+              <Input.Password />
             </Form.Item>
 
             <Form.Item style={{ paddingRight: "25px" }}>
-              <Button type="primary"  htmlType="submit">
+              <Button type="primary" htmlType="submit">
                 Iniciar sesión
               </Button>
             </Form.Item>
