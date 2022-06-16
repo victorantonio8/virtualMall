@@ -35,7 +35,7 @@ export default function ListSellsByBusiness() {
     if (sells.length !== 0) {
       var wb = utils.book_new(),
         ws = utils.json_to_sheet(sells);
-      utils.book_append_sheet(wb, ws, "MySheet1");
+      utils.book_append_sheet(wb, ws, "Reporte");
       writeFile(wb, "Mis-Ventas.xlsx");
     } else {
       message.info("Por favor genere un reporte para poder exportar");
@@ -100,7 +100,7 @@ export default function ListSellsByBusiness() {
                   Generar Reporte
                 </Button>
               </div>
-              <div style={{ display: "inline-flex", paddingLeft:"10px" }}>
+              <div style={{ display: "inline-flex", paddingLeft: "10px" }}>
                 <Button type="primary" onClick={exportExcel}>
                   Exportar Reporte
                 </Button>
