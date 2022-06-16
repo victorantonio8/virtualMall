@@ -1,8 +1,9 @@
 import { supabaseClient } from "../supabaseClient";
-import { Product } from "../Clients/Models/productModel";
+import { CreateProduct, Product } from "../Clients/Models/productModel";
 import { Comment } from "antd";
 import { cars } from "../Clients/Models/carsModel";
 import { sells } from "../Clients/Models/sellsModel";
+import { RcFile } from "antd/lib/upload";
 
 export async function getProductsByBusiness(businessId: string) {
   const { data, error } = await supabaseClient
@@ -205,10 +206,50 @@ export async function getCategoriesByBusiness() {
     .select(
       `
             id,
-            name
+            name,
+            availableSizes
         `
     )
     .eq("idBusiness", idBusiness);
 
   return data ?? [];
+}
+
+async function uploadImage(file: RcFile) {
+  const extension = file.name.split(".").pop();
+  const fileId = file.uid;
+  const fileName = `${fileId}.${extension}`;
+  const bucketUrl =
+    "https://fpnxfacxjubvouiewpad.supabase.co/storage/v1/object/public/";
+  const { data, error } = await supabaseClient.storage
+    .from("images")
+    .upload(fileName, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return `${bucketUrl}/${data!.Key}`;
+}
+
+export async function createProduct(product: CreateProduct) {
+  const urlPicture = await uploadImage(product.urlPicture);
+  const idBusiness = localStorage.getItem("idBusiness");
+  const urlPictureSide = await uploadImage(product.urlPictureSide);
+  const urlPictureBack = await uploadImage(product.urlPictureBack);
+
+  await supabaseClient.from("products").insert({
+    ...product,
+    urlPicture,
+    urlPictureSide,
+    urlPictureBack,
+    idBusiness,
+  });
+}
+
+export async function deleteProduct(id: string) {
+  await supabaseClient.from("products").delete().match({ id });
 }

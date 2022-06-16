@@ -9,22 +9,48 @@ import {
   Checkbox,
   Row,
   Col,
+  Upload,
+  Spin,
+  message,
 } from "antd";
-import { getCategoriesByBusiness } from "../../api/productsApi";
+import { createProduct, getCategoriesByBusiness } from "../../api/productsApi";
+import { UploadOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function AddProduct() {
   const [categories, setCategories] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>();
+  const [form] = Form.useForm();
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getCategoriesByBusiness().then((data) => setCategories(data));
+    getCategoriesByBusiness().then((data) => {
+      form.setFieldsValue({ idCategory: data[0].id });
+      setSelectedCategory(data[0]);
+      setCategories(data);
+    });
   }, []);
 
-  const onFinish = (values: any) => {
-    debugger;
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    try {
+      await createProduct({
+        ...values,
+        urlPicture: values.urlPicture[0].originFileObj,
+        urlPictureSide: values.urlPictureSide[0].originFileObj,
+        urlPictureBack: values.urlPictureBack[0].originFileObj,
+      });
+      form.resetFields();
+      history.push("/products");
+      message.success("Producto agregado exitosamente");
+    } catch (error) {
+      setLoading(false);
+      message.error("Ocurrió al agregar el producto");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -42,15 +68,15 @@ export default function AddProduct() {
   const { TextArea } = Input;
 
   return (
-    <div>
+    <Spin spinning={loading}>
       <Title style={{ textAlign: "center", marginBottom: "50px" }}>
         Agregar nuevo producto
       </Title>
       <Form
+        form={form}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 8 }}
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -100,7 +126,12 @@ export default function AddProduct() {
           label="Categoría"
           rules={[{ required: true, message: "Campo requerido" }]}
         >
-          <Select placeholder="Seleccione una categoría">
+          <Select
+            placeholder="Seleccione una categoría"
+            onChange={(id) => {
+              setSelectedCategory(categories.find((c) => c.id === id));
+            }}
+          >
             {categories.map((category, index) => (
               <Option key={index} value={category.id}>
                 {category.name}
@@ -109,37 +140,78 @@ export default function AddProduct() {
           </Select>
         </Form.Item>
 
-        <Form.Item name="checkbox-group" label="Tallas">
-          <Checkbox.Group>
-            <Row>
-              <Col span={8}>
-                <Checkbox value="XS" style={{ lineHeight: "32px" }}>
-                  XS
-                </Checkbox>
-              </Col>
-              <Col span={8}>
-                <Checkbox value="S" style={{ lineHeight: "32px" }}>
-                  S
-                </Checkbox>
-              </Col>
-              <Col span={8}>
-                <Checkbox value="M" style={{ lineHeight: "32px" }}>
-                  M
-                </Checkbox>
-              </Col>
-              <Col span={8}>
-                <Checkbox value="XL" style={{ lineHeight: "32px" }}>
-                  XL
-                </Checkbox>
-              </Col>
-              <Col span={8}>
-                <Checkbox value="L" style={{ lineHeight: "32px" }}>
-                  L
-                </Checkbox>
-              </Col>
-            </Row>
-          </Checkbox.Group>
+        <Form.Item
+          name="urlPicture"
+          label="Foto frontal"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <Upload
+            name="urlPicture"
+            listType="picture"
+            maxCount={1}
+            beforeUpload={() => false}
+          >
+            <Button icon={<UploadOutlined />}>Seleccionar archivo</Button>
+          </Upload>
         </Form.Item>
+
+        <Form.Item
+          name="urlPictureSide"
+          label="Foto lateral"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <Upload
+            name="urlPictureSide"
+            listType="picture"
+            maxCount={1}
+            beforeUpload={() => false}
+          >
+            <Button icon={<UploadOutlined />}>Seleccionar archivo</Button>
+          </Upload>
+        </Form.Item>
+
+        <Form.Item
+          name="urlPictureBack"
+          label="Foto trasera"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Campo requerido" }]}
+        >
+          <Upload
+            name="urlPictureBack"
+            listType="picture"
+            maxCount={1}
+            beforeUpload={() => false}
+          >
+            <Button icon={<UploadOutlined />}>Seleccionar archivo</Button>
+          </Upload>
+        </Form.Item>
+
+        {selectedCategory && (
+          <Form.Item
+            name="sizes"
+            label="Tallas"
+            rules={[{ required: true, message: "Campo requerido" }]}
+          >
+            <Checkbox.Group>
+              <Row>
+                {selectedCategory.availableSizes.map(
+                  (size: string, index: number) => (
+                    <Col span={8} key={index}>
+                      <Checkbox value={size} style={{ lineHeight: "32px" }}>
+                        {size}
+                      </Checkbox>
+                    </Col>
+                  )
+                )}
+              </Row>
+            </Checkbox.Group>
+          </Form.Item>
+        )}
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
@@ -147,6 +219,6 @@ export default function AddProduct() {
           </Button>
         </Form.Item>
       </Form>
-    </div>
+    </Spin>
   );
 }

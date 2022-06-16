@@ -1,15 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Button, Typography } from "antd";
+import { Button, message, Modal, Typography } from "antd";
 import { Space, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { getProductsByUser } from "../../api/productsApi";
+import { deleteProduct, getProductsByUser } from "../../api/productsApi";
 import { useHistory } from "react-router";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+
 const { Title } = Typography;
+
+const { confirm } = Modal;
 
 export default function ListProducts() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+
+  const showConfirm = (productId: string) => {
+    confirm({
+      title: "¿Está seguro que desea elimiar el producto?",
+      icon: <ExclamationCircleOutlined />,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        deleteProduct(productId)
+          .then(() => {
+            setProducts(products.filter((p) => p.id !== productId));
+            message.success("Producto elimando exitosamente");
+          })
+          .catch(() => {
+            message.error("Ocurrió al eliminar el producto");
+          });
+      },
+      onCancel() {},
+    });
+  };
 
   useEffect(() => {
     getProductsByUser()
@@ -57,7 +82,7 @@ export default function ListProducts() {
       render: (_, record) => (
         <Space size="middle">
           <Button>Editar</Button>
-          <Button type="primary" danger>
+          <Button type="primary" danger onClick={() => showConfirm(record.id)}>
             Eliminar
           </Button>
         </Space>
