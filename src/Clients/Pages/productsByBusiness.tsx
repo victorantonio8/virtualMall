@@ -263,13 +263,15 @@ export default function ProductsByBusiness() {
                               onCancel={handleCancel}
                             >
                               <p>
-                                Ejemplo: Real Madrid - Talla S - Victor Mendez
-                                #10
+                                Ejemplo en Camisa: Real Madrid - Talla S -
+                                Victor Mendez #10 
                               </p>
+                              <p>Ejemplo en Pastel: Feliz
+                                cumpleaños Margarita</p>
                               <Input
                                 onChange={onChangeInputPersonalizar}
                                 id={"inputPersonalizar"}
-                                placeholder="Camisa - Talla - Nombre"
+                                placeholder="ingrese su personalización totalmente gratis"
                               />
                             </Modal>
                           </span>
