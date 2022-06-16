@@ -74,7 +74,7 @@ export default function DetailProductById() {
         {product && (
           <div>
             <Row>
-              <Col span={8}>
+              <Col span={10}>
                 <Tabs defaultActiveKey="1">
                   <TabPane tab="Front" key="1">
                     <Image
@@ -123,41 +123,32 @@ export default function DetailProductById() {
                   </TabPane>
                 </Tabs>
               </Col>
-              <Col span={16}>
-                <div>
-                  <Descriptions key={1} title={product.name}>
+              <Col span={11}>
+                <div style={{paddingTop:"60px"}}>
+                <h3 style={{ fontWeight: "bold", fontSize:"24px" }}>{product.name}</h3>
+
+                  <Descriptions key={2} style={{fontSize:"24px"}}>
                     <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold" }}
+                      labelStyle={{ fontWeight: "bold", fontSize:"20px" }}
                       label="Precio"
                     >
-                      {product.price}
+                      <span style={{fontSize:"20px"}}>{product.price}</span>
                     </Descriptions.Item>
                     <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold" }}
+                      labelStyle={{ fontWeight: "bold", fontSize:"20px" }}
                       label="en Stock"
                     >
-                      {product.stock}
+                      <span style={{fontSize:"20px"}}>{product.stock}</span> 
                     </Descriptions.Item>
                   </Descriptions>
 
-                  <Descriptions key={2}>
-                    <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold" }}
-                      label="Descripción breve"
-                    >
-                      {product.shortDescription}
-                    </Descriptions.Item>
-                  </Descriptions>
 
-                  <Descriptions key={3}>
-                    <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold" }}
-                      label="Descripción a Detalle"
-                    >
-                      {product.longDescription}
-                    </Descriptions.Item>
-                  </Descriptions>
-                </div>
+                 
+                </div> 
+                <h3 style={{ fontWeight: "bold", fontSize:"20px" }}>Descripción:</h3>
+                <span style={{fontSize:"20px"}}>{product.shortDescription}</span> 
+                <h3 style={{ fontWeight: "bold", fontSize:"20px", paddingTop:"15px" }}>Detalle:</h3>
+                <span style={{fontSize:"20px"}}>{product.longDescription}</span>
               </Col>
             </Row>
             <Row justify="center">

@@ -8,6 +8,7 @@ import {
 import { NavLink, useHistory } from "react-router-dom";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
 
+
 const { Sider, Content } = Layout;
 
 interface DashboardProps {
@@ -84,7 +85,12 @@ export default function Dashboard({ children }: DashboardProps) {
         {
           key: "Product",
           label: <NavLink to={"/products"}>Productos</NavLink>,
-          icon: <StarOutlined style={{ fontSize: "16px" }} />,
+          icon: <PicCenterOutlined style={{ fontSize: "16px" }} />,
+        },
+        {
+          key: "Sells",
+          label: <NavLink to={"/sellsProducts"}>Ventas</NavLink>,
+          icon: <PicCenterOutlined style={{ fontSize: "16px" }} />,
         },
         {
           key: "logout",

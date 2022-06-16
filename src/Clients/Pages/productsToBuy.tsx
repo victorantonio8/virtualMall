@@ -49,7 +49,6 @@ export default function ProductsToBuy() {
 
   const handleOk = async (values: any) => {
     setIsModalVisible(false);
-
     values.forEach((result: any) => {
       const _cart = {
         productName: result["productname"],
@@ -57,6 +56,8 @@ export default function ProductsToBuy() {
         quantity: result["quantity"],
         total: result["total"],
         idProduct: result["idproduct"],
+        size: result["size"],
+        observations: result ["observations"],
         usuarioId: _usuarioId,
       } as sells;
 

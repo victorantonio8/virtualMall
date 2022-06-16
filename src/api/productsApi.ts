@@ -253,3 +253,15 @@ export async function createProduct(product: CreateProduct) {
 export async function deleteProduct(id: string) {
   await supabaseClient.from("products").delete().match({ id });
 }
+
+export async function getSellsByBusiness(dateI: String, dateF:String, idBusiness:string) {
+  const { data, error } = await supabaseClient.rpc("get_sells_by_business", {
+    _datei: dateF, _datef: dateF, _idbusiness:idBusiness
+  });
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result;
+}

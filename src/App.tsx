@@ -10,6 +10,7 @@ import ProductsToBuy from "./Clients/Pages/productsToBuy";
 import PrivateRoute from "./Clients/Pages/PrivateRoute";
 import ListProducts from "./Clients/Pages/ListProducts";
 import AddProduct from "./Clients/Pages/AddProduct";
+import ListSellsByBusiness from "./Clients/Pages/ListSellsByBusiness";
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/addProduct">
             <AddProduct />
+          </PrivateRoute>
+          <PrivateRoute exact path="/sellsProducts">
+            <ListSellsByBusiness />
           </PrivateRoute>
         </Switch>
       </Router>
