@@ -256,7 +256,7 @@ export async function deleteProduct(id: string) {
 
 export async function getSellsByBusiness(dateI: String, dateF:String, idBusiness:string) {
   const { data, error } = await supabaseClient.rpc("get_sells_by_business", {
-    _datei: dateF, _datef: dateF, _idbusiness:idBusiness
+    _datei: dateI, _datef: dateF, _idbusiness:idBusiness
   });
   let result = 0;
   if (data) {

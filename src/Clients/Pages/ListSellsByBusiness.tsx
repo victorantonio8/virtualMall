@@ -22,6 +22,7 @@ export default function ListSellsByBusiness() {
 
   const generateReport = () => {
     setLoading(true);
+    setSells([]);
     getSellsByBusiness(dateI as String, dateF as String, idBusiness as string)
       .then((data) => {
         setSells(data as any);
@@ -46,6 +47,11 @@ export default function ListSellsByBusiness() {
       title: "Producto",
       dataIndex: "productname",
       key: "productname",
+    },
+    {
+      title: "Tamaño",
+      dataIndex: "size",
+      key: "size",
     },
     {
       title: "Precio",
