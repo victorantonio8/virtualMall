@@ -23,7 +23,7 @@ export default function Login() {
         }
       });
     } catch (error: any) {
-      message.warning("error al iniciar sesion.");
+      message.warning("error al iniciar sesion. contactar al tecnico");
     }
   };
 
@@ -35,7 +35,7 @@ export default function Login() {
           display: "flex",
           justifyContent: "end",
           paddingTop: "20px",
-          zoom:"90%"
+          zoom: "90%",
         }}
       >
         <Form
