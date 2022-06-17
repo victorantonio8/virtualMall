@@ -313,7 +313,7 @@ export async function updateProduct(id: string, product: CreateProduct) {
 
   if (product.urlPictureBack) {
     const urlPictureBack = await uploadImage(product.urlPictureBack);
-    productUpdated.urlPicture = urlPictureBack;
+    productUpdated.urlPictureBack = urlPictureBack;
   }
 
   await supabaseClient
