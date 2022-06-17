@@ -1,76 +1,66 @@
 .card-footer {
-    display: flex;
-    margin-top: 15px;
-    border-top: 1px solid rgba(0,0,0,.06);
+  display: flex;
+  margin-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-
-
 .card-footer > div {
-    width: 33.33%;
-    padding: 15px;
-    text-align: center;
+  width: 33.33%;
+  padding: 15px;
+  text-align: center;
 
-    border-right: 1px solid rgba(0,0,0,.06);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .card-footer > div:last-child {
-    border: 0;
+  border: 0;
 }
 
 .card-footer span {
-    display: block;
+  display: block;
 }
 
 .card-footerv2 {
-    display: flex;
-    margin-top: 15px;
-
+  display: flex;
+  margin-top: 15px;
 }
 
-
-
 .product-card .ant-card-cover {
-    flex: 0 1 auto;
+  flex: 0 1 auto;
 }
 
 .product-card .ant-card-body {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .logo {
-    width: 50%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.designdiv1{
-    border-radius: 2px;
-    background-color: rgba(49, 45, 47, 0.884);
-    width: 60%;
-    height: 8%;
-    margin: 0 auto;
+.designdiv1 {
+  border-radius: 2px;
+  background-color: rgba(49, 45, 47, 0.884);
+  width: 60%;
+  height: 8%;
+  margin: 0 auto;
 }
 
-.designdiv2{
-    border-radius: 10px;
-    background-color: rgb(134, 59, 123);
-    width: 75%;
-    height: 25%;
-    margin: 0 auto;
+.designdiv2 {
+  border-radius: 10px;
+  background-color: rgb(134, 59, 123);
+  width: 75%;
+  height: 25%;
+  margin: 0 auto;
 }
 
-.input1{
-    padding-top: 50px;
-    border-radius: 5px;
-    background-color: rgba(151, 93, 143, 0.808);
-    width: 100%;
-    height: 5%;
-    font-weight: bold;
-    
+.input1 {
+  padding-top: 50px;
+  border-radius: 5px;
+  background-color: rgba(151, 93, 143, 0.808);
+  width: 100%;
+  height: 5%;
+  font-weight: bold;
 }
-
-
-
-
