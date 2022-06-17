@@ -113,8 +113,7 @@ const App: React.FC = () => {
         </Form>
         <div
           style={{
-            padding: "40px",
-            borderTop: "2px solid grey",
+            padding: "20px",
             position: "fixed",
             left: 0,
             right: 0,
@@ -122,9 +121,11 @@ const App: React.FC = () => {
             fontWeight: "bold",
             fontSize: "14px",
             textAlign: "center",
+            background: "rgb(42, 49, 50)",
+            color: "#fff",
           }}
         >
-          <p>
+          <p style={{ margin: "0px" }}>
             Se deseas convertirte en miembro para promocionar tus productos
             escribenos a{" "}
             <a href="mailto:info@virtualmall.com">info@virtualmall.com</a>.
