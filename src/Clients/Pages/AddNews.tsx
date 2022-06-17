@@ -1,19 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Typography,
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Checkbox,
-  Row,
-  Col,
-  Upload,
-  Spin,
-  message,
-} from "antd";
-import { createProduct, getCategoriesByBusiness } from "../../api/productsApi";
+import { Typography, Button, Form, Input, Upload, Spin, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
 import { createNews } from "../../api/newsApi";

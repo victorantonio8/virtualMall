@@ -14,7 +14,6 @@ import {
   message,
 } from "antd";
 import {
-  createProduct,
   fetchProductById,
   getCategoriesByBusiness,
   updateProduct,

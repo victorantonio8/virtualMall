@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { Space, Table, Row, Col, DatePicker, Button, message } from "antd";
 import type { DatePickerProps } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { getSellsByBusiness } from "../../api/productsApi";
-import XLSX, { utils, writeFile } from "xlsx";
+import { utils, writeFile } from "xlsx";
 
 export default function ListSellsByBusiness() {
   const [sells, setSells] = useState<any[]>([]);
