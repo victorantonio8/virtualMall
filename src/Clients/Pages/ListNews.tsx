@@ -1,31 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Modal, Typography } from "antd";
-import { Space, Table } from "antd";
-import { ColumnsType } from "antd/lib/table";
-import { deleteProduct, getProductsByUser } from "../../api/productsApi";
+import { Button, message, Modal, Space, Typography } from "antd";
 import { useHistory } from "react-router";
+import Table, { ColumnsType } from "antd/lib/table";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-
-const { Title } = Typography;
-
-const { confirm } = Modal;
-
-export default function ListProducts() {
-  const [products, setProducts] = useState<any[]>([]);
+import { deleteNews, getNewsByBusinessId } from "../../api/newsApi";
+export default function ListNews() {
+  const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
+  const { confirm } = Modal;
+  const { Title } = Typography;
+
   const showConfirm = (productId: string) => {
     confirm({
-      title: "¿Está seguro que desea elimiar el producto?",
+      title: "¿Está seguro que desea elimiar la noticia?",
       icon: <ExclamationCircleOutlined />,
       okText: "Eliminar",
       okType: "danger",
       cancelText: "Cancelar",
       onOk() {
-        deleteProduct(productId)
+        deleteNews(productId)
           .then(() => {
-            setProducts(products.filter((p) => p.id !== productId));
+            setNews(news.filter((p) => p.id !== productId));
             message.success("Producto elimando exitosamente");
           })
           .catch(() => {
@@ -37,9 +34,9 @@ export default function ListProducts() {
   };
 
   useEffect(() => {
-    getProductsByUser()
+    getNewsByBusinessId()
       .then((data) => {
-        setProducts(data);
+        setNews(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -57,33 +54,20 @@ export default function ListProducts() {
       ),
     },
     {
-      title: "Nombre",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Descripción",
+      title: "Descripción corta",
       dataIndex: "shortDescription",
       key: "shortDescription",
     },
     {
-      title: "Cantidad en inventario",
-      dataIndex: "stock",
-      key: "stock",
-    },
-    {
-      title: "Precio",
-      key: "price",
-      dataIndex: "price",
+      title: "Descripción larga",
+      dataIndex: "longDescription",
+      key: "longDescription",
     },
     {
       title: "Acción",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => history.push(`/editProduct/${record.id}`)}>
-            Editar
-          </Button>
           <Button type="primary" danger onClick={() => showConfirm(record.id)}>
             Eliminar
           </Button>
@@ -95,18 +79,18 @@ export default function ListProducts() {
   return (
     <div>
       <Title style={{ textAlign: "center", marginBottom: "50px" }}>
-        Lista de productos
+        Lista de noticias
       </Title>
       <Button
         type="primary"
         style={{ marginBottom: "30px" }}
-        onClick={() => history.push("/addProduct")}
+        onClick={() => history.push("/addNews")}
       >
-        Agregar nuevo producto
+        Agregar nueva noticia
       </Button>
       <Table
         columns={columns}
-        dataSource={products}
+        dataSource={news}
         loading={loading}
         rowKey="name"
       />

@@ -11,6 +11,10 @@ import PrivateRoute from "./Clients/Pages/PrivateRoute";
 import ListProducts from "./Clients/Pages/ListProducts";
 import AddProduct from "./Clients/Pages/AddProduct";
 import ListSellsByBusiness from "./Clients/Pages/ListSellsByBusiness";
+import EditProduct from "./Clients/Pages/EditProduct";
+import SignUp from "./Clients/Pages/SignUp";
+import ListNews from "./Clients/Pages/ListNews";
+import AddNews from "./Clients/Pages/AddNews";
 
 function App() {
   return (
@@ -19,6 +23,9 @@ function App() {
         <Switch>
           <Route exact path={"/login"}>
             <Login />
+          </Route>
+          <Route exact path="/registro">
+            <SignUp />
           </Route>
           <PrivateRoute exact path="/">
             <Main />
@@ -38,8 +45,17 @@ function App() {
           <PrivateRoute exact path="/products">
             <ListProducts />
           </PrivateRoute>
+          <PrivateRoute exact path="/news">
+            <ListNews />
+          </PrivateRoute>
+          <PrivateRoute exact path="/addNews">
+            <AddNews />
+          </PrivateRoute>
           <PrivateRoute exact path="/addProduct">
             <AddProduct />
+          </PrivateRoute>
+          <PrivateRoute exact path="/editProduct/:id">
+            <EditProduct />
           </PrivateRoute>
           <PrivateRoute exact path="/sellsProducts">
             <ListSellsByBusiness />

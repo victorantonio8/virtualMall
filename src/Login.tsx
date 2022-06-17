@@ -86,12 +86,26 @@ export default function Login() {
             >
               <Input.Password />
             </Form.Item>
-
-            <Form.Item style={{ paddingRight: "25px" }}>
+            <Form.Item>
               <Button type="primary" htmlType="submit">
                 Iniciar sesión
               </Button>
             </Form.Item>
+            <div style={{ paddingRight: "25px" }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  margin: "0 10px",
+                  color: "white",
+                }}
+              ></span>
+              <Button
+                htmlType="button"
+                onClick={() => history.push("/registro")}
+              >
+                Registrarse
+              </Button>
+            </div>
           </div>
         </Form>
       </div>
