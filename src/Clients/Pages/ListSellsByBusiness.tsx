@@ -73,6 +73,21 @@ export default function ListSellsByBusiness() {
       key: "created_at",
       dataIndex: "created_at",
     },
+    {
+      title: "Observaciones",
+      key: "observations",
+      dataIndex: "observations",
+    },
+    {
+      title: "Cliente",
+      key: "nombres",
+      dataIndex: "nombres",
+    },
+    {
+      title: "Contacto",
+      key: "telefono",
+      dataIndex: "telefono",
+    },
   ];
 
   return (

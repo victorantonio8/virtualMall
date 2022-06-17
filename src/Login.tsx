@@ -17,7 +17,7 @@ export default function Login() {
           localStorage.setItem("idBusiness", respone.idBusiness);
           setUsuario(respone.data);
           history.push("/");
-          message.success("ha iniciado sesion correctamente.");
+          //message.success("ha iniciado sesion correctamente.");
         } else {
           message.error("usuario o contraseña incorrecta.");
         }
