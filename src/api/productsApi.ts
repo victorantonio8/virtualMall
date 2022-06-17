@@ -254,9 +254,15 @@ export async function deleteProduct(id: string) {
   await supabaseClient.from("products").delete().match({ id });
 }
 
-export async function getSellsByBusiness(dateI: String, dateF:String, idBusiness:string) {
+export async function getSellsByBusiness(
+  dateI: String,
+  dateF: String,
+  idBusiness: string
+) {
   const { data, error } = await supabaseClient.rpc("get_sells_by_business", {
-    _datei: dateI, _datef: dateF, _idbusiness:idBusiness
+    _datei: dateI,
+    _datef: dateF,
+    _idbusiness: idBusiness,
   });
   let result = 0;
   if (data) {
@@ -264,4 +270,57 @@ export async function getSellsByBusiness(dateI: String, dateF:String, idBusiness
   }
 
   return result;
+}
+
+export async function fetchProductById(id: string) {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select(
+      `id,
+                name,
+                shortDescription,
+                longDescription,
+                stock,
+                price,
+                idCategory,
+                idBusiness, 
+                sizes,
+                categoryProducts (
+                    id,
+                    name,
+                    availableSizes
+                )`
+    )
+    .eq("id", id);
+
+  return data?.[0];
+}
+
+export async function updateProduct(id: string, product: CreateProduct) {
+  const idBusiness = localStorage.getItem("idBusiness");
+
+  let productUpdated = { ...product } as any;
+
+  if (product.urlPicture) {
+    const urlPicture = await uploadImage(product.urlPicture);
+    productUpdated.urlPicture = urlPicture;
+  }
+
+  if (product.urlPictureSide) {
+    const urlPictureSide = await uploadImage(product.urlPictureSide);
+    productUpdated.urlPictureSide = urlPictureSide;
+  }
+
+  if (product.urlPictureBack) {
+    const urlPictureBack = await uploadImage(product.urlPictureBack);
+    productUpdated.urlPicture = urlPictureBack;
+  }
+
+  await supabaseClient
+    .from("products")
+    .update({
+      ...productUpdated,
+      idBusiness,
+    })
+    .match({ id });
 }

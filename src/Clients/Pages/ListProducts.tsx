@@ -81,7 +81,9 @@ export default function ListProducts() {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button>Editar</Button>
+          <Button onClick={() => history.push(`/editProduct/${record.id}`)}>
+            Editar
+          </Button>
           <Button type="primary" danger onClick={() => showConfirm(record.id)}>
             Eliminar
           </Button>

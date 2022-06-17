@@ -11,6 +11,7 @@ import PrivateRoute from "./Clients/Pages/PrivateRoute";
 import ListProducts from "./Clients/Pages/ListProducts";
 import AddProduct from "./Clients/Pages/AddProduct";
 import ListSellsByBusiness from "./Clients/Pages/ListSellsByBusiness";
+import EditProduct from "./Clients/Pages/EditProduct";
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/addProduct">
             <AddProduct />
+          </PrivateRoute>
+          <PrivateRoute exact path="/editProduct/:id">
+            <EditProduct />
           </PrivateRoute>
           <PrivateRoute exact path="/sellsProducts">
             <ListSellsByBusiness />
