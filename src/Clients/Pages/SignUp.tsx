@@ -127,7 +127,7 @@ const App: React.FC = () => {
         >
           <p style={{ margin: "0px" }}>
             Se deseas convertirte en miembro para promocionar tus productos
-            escribenos a{" "}
+            escríbenos a{" "}
             <a href="mailto:info@virtualmall.com">info@virtualmall.com</a>.
           </p>
         </div>
