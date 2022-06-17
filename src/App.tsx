@@ -12,6 +12,7 @@ import ListProducts from "./Clients/Pages/ListProducts";
 import AddProduct from "./Clients/Pages/AddProduct";
 import ListSellsByBusiness from "./Clients/Pages/ListSellsByBusiness";
 import EditProduct from "./Clients/Pages/EditProduct";
+import SignUp from "./Clients/Pages/SignUp";
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
         <Switch>
           <Route exact path={"/login"}>
             <Login />
+          </Route>
+          <Route exact path="/registro">
+            <SignUp />
           </Route>
           <PrivateRoute exact path="/">
             <Main />
