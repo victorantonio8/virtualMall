@@ -70,7 +70,7 @@ export default function DetailProductById() {
   return (
     <>
       <div>{!product && <p>Producto no encontrado</p>}</div>
-      <div>
+      <div style={{zoom:"90%"}}>
         {product && (
           <div>
             <Row>

@@ -35,6 +35,7 @@ export default function Login() {
           display: "flex",
           justifyContent: "end",
           paddingTop: "20px",
+          zoom:"90%"
         }}
       >
         <Form
