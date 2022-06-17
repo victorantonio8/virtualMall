@@ -215,7 +215,7 @@ export async function getCategoriesByBusiness() {
   return data ?? [];
 }
 
-async function uploadImage(file: RcFile) {
+export async function uploadImage(file: RcFile) {
   const extension = file.name.split(".").pop();
   const fileId = file.uid;
   const fileName = `${fileId}.${extension}`;

@@ -13,6 +13,8 @@ import AddProduct from "./Clients/Pages/AddProduct";
 import ListSellsByBusiness from "./Clients/Pages/ListSellsByBusiness";
 import EditProduct from "./Clients/Pages/EditProduct";
 import SignUp from "./Clients/Pages/SignUp";
+import ListNews from "./Clients/Pages/ListNews";
+import AddNews from "./Clients/Pages/AddNews";
 
 function App() {
   return (
@@ -42,6 +44,12 @@ function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/products">
             <ListProducts />
+          </PrivateRoute>
+          <PrivateRoute exact path="/news">
+            <ListNews />
+          </PrivateRoute>
+          <PrivateRoute exact path="/addNews">
+            <AddNews />
           </PrivateRoute>
           <PrivateRoute exact path="/addProduct">
             <AddProduct />
