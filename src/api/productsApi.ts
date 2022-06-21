@@ -38,6 +38,19 @@ export async function getProductsByBusiness(businessId: string) {
   return data;
 }
 
+export async function getRateOfUser(_usuarioId: string, _productId:string) {
+  const { data, error } = await supabaseClient
+    .from("rates")
+    .select("stars")
+    .match({usuarioId: _usuarioId, productId:_productId});
+
+    let result = 0;
+    if (data) {
+      result = data[0].stars as any;
+    }
+    return result as number;
+}
+
 export async function getProductById(
   productId: string
 ): Promise<Product | null> {
@@ -57,6 +70,9 @@ export async function getProductById(
                     idCategory,
                     idBusiness,
                     sizes,
+                    rates(
+                      stars
+                    ),
                     comments(
                       id,
                       description,
@@ -74,7 +90,6 @@ export async function getProductById(
   if (error) {
     return null;
   }
-
   return data?.[0] as Product;
 }
 

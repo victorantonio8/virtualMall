@@ -17,7 +17,7 @@ import {
   Modal,
 } from "antd";
 import moment from "moment";
-import { addRateToProduct, getProductById } from "../../api/productsApi";
+import { addRateToProduct, getProductById, getRateOfUser } from "../../api/productsApi";
 import { Comment as CommentModel } from "../Models/commentModel";
 import { addComments } from "../../api/productsApi";
 import { rates } from "../Models/rateModel";
@@ -37,12 +37,21 @@ export default function DetailProductById() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [rate, setRate] = useState<number>(0);
   const _usuarioId = localStorage.getItem("myUser");
+  const [ratebyUser, setratebyUser] = useState<number>(0);
 
   useEffect(() => {
     getProductById(productId).then((data) => {
       setProduct(data);
     });
   }, [productId]);
+
+
+  useEffect(()=>{
+    getRateOfUser(_usuarioId as string, productId).then((result)=>{
+      setratebyUser(result as number);
+      console.log(ratebyUser);
+    })
+  },[]);
 
   const onFinish = async (values: any) => {
     const _description = values["description"];
@@ -194,6 +203,29 @@ export default function DetailProductById() {
                 <span style={{ fontSize: "20px" }}>
                   {product.longDescription}
                 </span>
+                <h3
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                    paddingTop: "15px",
+                  }}
+                >
+                  Puntuación general:
+                </h3>
+                <span style={{ fontSize: "20px" }}>
+                  <Rate
+                    disabled
+                    allowHalf
+                    defaultValue={
+                      product?.rates && product.rates.length > 0
+                        ? product.rates.reduce(
+                            (prev, current) => current.stars + prev,
+                            0
+                          ) / product.rates.length
+                        : 0
+                    }
+                  />
+                </span>
               </Col>
             </Row>
             <Row justify="center">
@@ -283,7 +315,7 @@ export default function DetailProductById() {
                   >
                     <p>Gracias por calificar nuestro producto</p>
 
-                    <Rate onChange={onChangeRate} defaultValue={0} />
+                    <Rate onChange={onChangeRate} defaultValue={ratebyUser} />
                   </Modal>
                 </div>
               </Col>
