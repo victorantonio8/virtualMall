@@ -15,6 +15,7 @@ import EditProduct from "./Clients/Pages/EditProduct";
 import SignUp from "./Clients/Pages/SignUp";
 import ListNews from "./Clients/Pages/ListNews";
 import AddNews from "./Clients/Pages/AddNews";
+import ListPurchasedProductsByUser from "./Clients/Pages/ListPurchasedProductsByUser";
 
 function App() {
   return (
@@ -59,6 +60,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/sellsProducts">
             <ListSellsByBusiness />
+          </PrivateRoute>
+          <PrivateRoute exact path="/purchasedProducts">
+            <ListPurchasedProductsByUser />
           </PrivateRoute>
         </Switch>
       </Router>

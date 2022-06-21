@@ -59,6 +59,7 @@ export default function ProductsToBuy() {
         size: result["size"],
         observations: result ["observations"],
         usuarioId: _usuarioId,
+        buyStatus:"pago recibido",
       } as sells;
 
       addSellByUser(_cart as sells).then((data) => {});

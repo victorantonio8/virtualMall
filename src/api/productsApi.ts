@@ -4,6 +4,8 @@ import { Comment } from "antd";
 import { cars } from "../Clients/Models/carsModel";
 import { sells } from "../Clients/Models/sellsModel";
 import { RcFile } from "antd/lib/upload";
+import { rates } from "../Clients/Models/rateModel";
+
 
 export async function getProductsByBusiness(businessId: string) {
   const { data, error } = await supabaseClient
@@ -24,12 +26,15 @@ export async function getProductsByBusiness(businessId: string) {
                 price,
                 idCategory,
                 idBusiness,
-                sizes
+                sizes,
+                rates(
+                  stars
+                )
             )
         `
     )
-    .eq("idBusiness", businessId);
-
+    .eq("idBusiness", businessId)
+    .eq("products.status", true);
   return data;
 }
 
@@ -194,7 +199,8 @@ export async function getProductsByUser() {
             urlPicture
         `
     )
-    .eq("idBusiness", idBusiness);
+    .eq("idBusiness", idBusiness)
+    .eq("status",true);
 
   return data ?? [];
 }
@@ -250,8 +256,8 @@ export async function createProduct(product: CreateProduct) {
   });
 }
 
-export async function deleteProduct(id: string) {
-  await supabaseClient.from("products").delete().match({ id });
+export async function deleteProduct(_id: string) {
+  await supabaseClient.from("products").update({status:false}).match({ id:_id });
 }
 
 export async function getSellsByBusiness(
@@ -271,6 +277,22 @@ export async function getSellsByBusiness(
 
   return result;
 }
+
+// export async function getPurchasedProductsByUser(
+//   usuarioId: string
+// ) {
+//   const { data, error } = await supabaseClient.rpc("get_sells_by_business", {
+//     _datei: dateI,
+//     _datef: dateF,
+//     _idbusiness: idBusiness,
+//   });
+//   let result = 0;
+//   if (data) {
+//     result = data as any;
+//   }
+
+//   return result;
+// }
 
 export async function fetchProductById(id: string) {
   const { data, error } = await supabaseClient
@@ -323,4 +345,24 @@ export async function updateProduct(id: string, product: CreateProduct) {
       idBusiness,
     })
     .match({ id });
+}
+
+export async function addRateToProduct(rates:rates) {
+  debugger;
+  const { data, error } = await supabaseClient
+    .from("rates")
+    .select("stars")
+    .match({ productId: rates.productId, usuarioId: rates.usuarioId });
+
+  if (data?.length === 0) {
+    const { data, error } = await supabaseClient.from("rates").insert(rates);
+    return data;
+  } else {
+    const { data, error } = await supabaseClient
+      .from("rates")
+      .update({ stars: rates.stars })
+      .match({ productId: rates.productId, usuarioId: rates.usuarioId });
+    return data;
+  }
+  
 }

@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
   Input,
+  Rate,
 } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useState } from "react";
@@ -256,25 +257,39 @@ export default function ProductsByBusiness() {
                                 />
                               }
                             ></Button>
-                            <Modal
-                              title="Personalización Gratis"
-                              visible={isModalVisible}
-                              onOk={() => onclickAddCart(selectedProductId)}
-                              onCancel={handleCancel}
-                            >
-                              <p>
-                                Ejemplo en Camisa: Real Madrid - Talla S -
-                                Victor Mendez #10 
-                              </p>
-                              <p>Ejemplo en Pastel: Feliz
-                                cumpleaños Margarita</p>
-                              <Input
-                                onChange={onChangeInputPersonalizar}
-                                id={"inputPersonalizar"}
-                                placeholder="ingrese su personalización totalmente gratis"
-                              />
-                            </Modal>
                           </span>
+                          <div style={{textAlign:"center"}}>
+                            <Rate
+                              disabled
+                              allowHalf
+                              defaultValue={
+                                product?.rates && product.rates.length > 0
+                                  ? product.rates.reduce(
+                                      (prev, current) => current.stars + prev,
+                                      0
+                                    ) / product.rates.length
+                                  : 0
+                              }
+                            />
+                          </div>
+
+                          <Modal
+                            title="Personalización Gratis"
+                            visible={isModalVisible}
+                            onOk={() => onclickAddCart(selectedProductId)}
+                            onCancel={handleCancel}
+                          >
+                            <p>
+                              Ejemplo en Camisa: Real Madrid - Talla S - Victor
+                              Mendez #10
+                            </p>
+                            <p>Ejemplo en Pastel: Feliz cumpleaños Margarita</p>
+                            <Input
+                              onChange={onChangeInputPersonalizar}
+                              id={"inputPersonalizar"}
+                              placeholder="ingrese su personalización totalmente gratis"
+                            />
+                          </Modal>
                         </div>
                       </div>
                     </Card>

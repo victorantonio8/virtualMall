@@ -13,11 +13,14 @@ import {
   Button,
   message,
   Tabs,
+  Rate,
+  Modal,
 } from "antd";
 import moment from "moment";
-import { getProductById } from "../../api/productsApi";
+import { addRateToProduct, getProductById } from "../../api/productsApi";
 import { Comment as CommentModel } from "../Models/commentModel";
 import { addComments } from "../../api/productsApi";
+import { rates } from "../Models/rateModel";
 
 const { TextArea } = Input;
 
@@ -31,6 +34,9 @@ export default function DetailProductById() {
   const [visible, setVisible] = useState(false);
   const { TabPane } = Tabs;
   const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [rate, setRate] = useState<number>(0);
+  const _usuarioId = localStorage.getItem("myUser");
 
   useEffect(() => {
     getProductById(productId).then((data) => {
@@ -41,7 +47,6 @@ export default function DetailProductById() {
   const onFinish = async (values: any) => {
     const _description = values["description"];
     const _productId = product?.id;
-    const _usuarioId = localStorage.getItem("myUser");
 
     const _comment = {
       description: _description,
@@ -67,10 +72,37 @@ export default function DetailProductById() {
     console.log("Failed:", errorInfo);
   };
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const onclickAddRate = (value: string) => {
+    const _productId = value;
+
+    const rates = {
+      stars: rate,
+      productId: _productId,
+      usuarioId: _usuarioId,
+    } as rates;
+
+    addRateToProduct(rates).then((result) => {
+      message.success("calificación agregada exitosamente");
+      setIsModalVisible(false);
+    });
+  };
+
+  const onChangeRate = (value: number) => {
+    setRate(value);
+  };
+
   return (
     <>
       <div>{!product && <p>Producto no encontrado</p>}</div>
-      <div style={{zoom:"90%"}}>
+      <div style={{ zoom: "90%" }}>
         {product && (
           <div>
             <Row>
@@ -124,31 +156,44 @@ export default function DetailProductById() {
                 </Tabs>
               </Col>
               <Col span={11}>
-                <div style={{paddingTop:"60px"}}>
-                <h3 style={{ fontWeight: "bold", fontSize:"24px" }}>{product.name}</h3>
+                <div style={{ paddingTop: "60px" }}>
+                  <h3 style={{ fontWeight: "bold", fontSize: "24px" }}>
+                    {product.name}
+                  </h3>
 
-                  <Descriptions key={2} style={{fontSize:"24px"}}>
+                  <Descriptions key={2} style={{ fontSize: "24px" }}>
                     <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold", fontSize:"20px" }}
+                      labelStyle={{ fontWeight: "bold", fontSize: "20px" }}
                       label="Precio"
                     >
-                      <span style={{fontSize:"20px"}}>{product.price}</span>
+                      <span style={{ fontSize: "20px" }}>{product.price}</span>
                     </Descriptions.Item>
                     <Descriptions.Item
-                      labelStyle={{ fontWeight: "bold", fontSize:"20px" }}
+                      labelStyle={{ fontWeight: "bold", fontSize: "20px" }}
                       label="en Stock"
                     >
-                      <span style={{fontSize:"20px"}}>{product.stock}</span> 
+                      <span style={{ fontSize: "20px" }}>{product.stock}</span>
                     </Descriptions.Item>
                   </Descriptions>
-
-
-                 
-                </div> 
-                <h3 style={{ fontWeight: "bold", fontSize:"20px" }}>Descripción:</h3>
-                <span style={{fontSize:"20px"}}>{product.shortDescription}</span> 
-                <h3 style={{ fontWeight: "bold", fontSize:"20px", paddingTop:"15px" }}>Detalle:</h3>
-                <span style={{fontSize:"20px"}}>{product.longDescription}</span>
+                </div>
+                <h3 style={{ fontWeight: "bold", fontSize: "20px" }}>
+                  Descripción:
+                </h3>
+                <span style={{ fontSize: "20px" }}>
+                  {product.shortDescription}
+                </span>
+                <h3
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                    paddingTop: "15px",
+                  }}
+                >
+                  Detalle:
+                </h3>
+                <span style={{ fontSize: "20px" }}>
+                  {product.longDescription}
+                </span>
               </Col>
             </Row>
             <Row justify="center">
@@ -176,8 +221,17 @@ export default function DetailProductById() {
                     >
                       <Row gutter={[16, 16]} justify="start">
                         <Col span={24}>
+                          <span style={{ fontSize: "20px" }}>
+                            Agregar Comentario
+                          </span>
+                          <Button
+                            style={{ fontSize: "20px" }}
+                            onClick={showModal}
+                            type="link"
+                          >
+                            ¿Desea calificar este producto?
+                          </Button>
                           <Form.Item
-                            label="Agregar comentario"
                             name="description"
                             rules={[
                               {
@@ -186,7 +240,7 @@ export default function DetailProductById() {
                               },
                             ]}
                           >
-                            <TextArea />
+                            <TextArea style={{ fontSize: "20px" }} />
                           </Form.Item>
                         </Col>
                       </Row>
@@ -221,6 +275,16 @@ export default function DetailProductById() {
                         />
                       ))}
                   </div>
+                  <Modal
+                    title="Calificación del producto"
+                    visible={isModalVisible}
+                    onOk={() => onclickAddRate(product.id)}
+                    onCancel={handleCancel}
+                  >
+                    <p>Gracias por calificar nuestro producto</p>
+
+                    <Rate onChange={onChangeRate} defaultValue={0} />
+                  </Modal>
                 </div>
               </Col>
             </Row>
