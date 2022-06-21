@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addSellByUser, deleteProductsInCart, getProductToBuy } from "../../api/productsApi";
+import { addSellByUser, deleteProductsInCart, getProductToBuy, getRowId, getTicketId } from "../../api/productsApi";
 import {
   Image,
   Descriptions,
@@ -29,6 +29,8 @@ export default function ProductsToBuy() {
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const history = useHistory();
+  const[rowId, setrowId] = useState<number>(0);
+  const[ticket, setTicket] = useState<number>(0);
 
   let totalPagar = 0;
 
@@ -43,12 +45,26 @@ export default function ProductsToBuy() {
     });
   }, [_usuarioId]);
 
+
+  useEffect(() => {
+    getRowId().then((result) =>{
+      setrowId(result);
+    });
+   },[]);
+
+ useEffect(() => {
+  getTicketId().then((result) =>{
+    setTicket(result);
+  });
+ },[]);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = async (values: any) => {
     setIsModalVisible(false);
+
     values.forEach((result: any) => {
       const _cart = {
         productName: result["productname"],
@@ -59,11 +75,15 @@ export default function ProductsToBuy() {
         size: result["size"],
         observations: result ["observations"],
         usuarioId: _usuarioId,
+        rowId: rowId,
+        ticketId: ticket,
         buyStatus:"pago recibido",
       } as sells;
 
       addSellByUser(_cart as sells).then((data) => {});
     });
+    setTicket(0);
+    setrowId(0);
     message.success("El pago fue hecho exitosamente");
     history.push("/");
   };

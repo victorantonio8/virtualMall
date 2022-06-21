@@ -8,6 +8,7 @@ export interface sells {
   usuarioId: string;
   size: string;
   observations:string;
+  rowId: number;
   ticketId: number;
   buyStatus:string;
 }

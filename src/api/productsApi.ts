@@ -133,6 +133,26 @@ export async function getProductToBuy(usuarioId: string) {
   return result;
 }
 
+export async function getRowId() {
+  const { data, error } = await supabaseClient.rpc("get_row_id");
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result as number;
+}
+
+export async function getTicketId() {
+  const { data, error } = await supabaseClient.rpc("get_ticket_id");
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result as number;
+}
+
 export async function addSellByUser(product: sells) {
   // capturamos la cantidad que compra el usuario
   let quantity = 0;
@@ -278,21 +298,28 @@ export async function getSellsByBusiness(
   return result;
 }
 
-// export async function getPurchasedProductsByUser(
-//   usuarioId: string
-// ) {
-//   const { data, error } = await supabaseClient.rpc("get_sells_by_business", {
-//     _datei: dateI,
-//     _datef: dateF,
-//     _idbusiness: idBusiness,
-//   });
-//   let result = 0;
-//   if (data) {
-//     result = data as any;
-//   }
+export async function getPurchasedProductsByUser(
+  usuarioId: string
+) {
+  const { data, error } = await supabaseClient.rpc("get_purchased_by_user", {
+    _usuarioid : usuarioId,
+  });
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
 
-//   return result;
-// }
+  return result;
+}
+
+export async function getDetailByTicket(ticketId: number) {
+  const { data, error } = await supabaseClient
+    .from("sells")
+    .select("*")
+    .eq("ticketId", ticketId);
+
+  return data;
+}
 
 export async function fetchProductById(id: string) {
   const { data, error } = await supabaseClient
