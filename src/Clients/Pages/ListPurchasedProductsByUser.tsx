@@ -76,7 +76,7 @@ export default function ListPurchasedProductsByUser() {
             ver detalle
           </Button>
           <Modal
-            title="Basic Modal"
+            title="Detalle de los productos"
             visible={isModalVisible}
             onCancel={handleCancel}
           >
