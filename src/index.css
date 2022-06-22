@@ -69,10 +69,7 @@
   font-size: 20px;
 }
 
-.ant-comment-content-author{
-  font-size: 18px;
-}
-
-.ant-comment-content-author > span{
-  font-size: 18px;
+.ant-comment-content-author > .ant-comment-content-author-name, 
+.ant-comment-content-author > .ant-comment-content-author-time {
+  font-size: 16px;
 }

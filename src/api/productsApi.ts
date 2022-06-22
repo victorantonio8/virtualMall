@@ -2,7 +2,7 @@ import { supabaseClient } from "../supabaseClient";
 import { CreateProduct, Product } from "../Clients/Models/productModel";
 import { Comment } from "antd";
 import { cars } from "../Clients/Models/carsModel";
-import { sells } from "../Clients/Models/sellsModel";
+import { reportSells, sells } from "../Clients/Models/sellsModel";
 import { RcFile } from "antd/lib/upload";
 import { rates } from "../Clients/Models/rateModel";
 
@@ -407,4 +407,12 @@ export async function addRateToProduct(rates:rates) {
     return data;
   }
   
+}
+
+export async function updateTicketStatus(_ticketId:number, _buystatus:string) {
+  const { data, error } = await supabaseClient
+  .from("sells")
+  .update({ buyStatus: _buystatus })
+  .match({ ticketId: _ticketId});
+return data;
 }
