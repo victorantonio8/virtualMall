@@ -21,6 +21,10 @@ import { utils, writeFile } from "xlsx";
 import type { RadioChangeEvent } from "antd";
 import { reportSells } from "../Models/sellsModel";
 
+import email from "@emailjs/browser";
+import { sendEmail } from "../../api/emailKey";
+
+
 export default function ListSellsByBusiness() {
   const [sells, setSells] = useState<any | null>();
   const [dateI, setDateI] = useState<String>();
@@ -32,6 +36,8 @@ export default function ListSellsByBusiness() {
   const [isModal2Visible, setIsModal2Visible] = useState(false);
   const [valueCheck, setValueCheck] = useState<String>();
   const [ticket, setTicket] = useState<Number>();
+  const [userName, setUserName] = useState<String>();
+  const [correo, setCorreo] = useState<String>();
 
   const plainOptions = [
     { label: "Pago recibido", value: "pago recibido" },
@@ -77,9 +83,11 @@ export default function ListSellsByBusiness() {
     });
   };
 
-  const onHandleClickUpdate = (ticketId: number, prevStatus: string) => {
+  const onHandleClickUpdate = (ticketId: number, prevStatus: string, userName: string, correo: string) => {
     setTicket(ticketId);
     setValueCheck(prevStatus);
+    setUserName(userName);
+    setCorreo(correo);
     setIsModal2Visible(true);
   };
 
@@ -96,14 +104,22 @@ export default function ListSellsByBusiness() {
   };
 
   const handleOkUpdate = () => {
-    updateTicketStatus(ticket as number, valueCheck as string).then(
+
+    let statusName = valueCheck as string;
+    let ticketNumber = ticket as number;
+    let _userName = userName as string;
+    let _correo = correo as string;
+
+    updateTicketStatus(ticketNumber, statusName).then(
       (result) => {
-        const statusUpdated = { ...sells } as reportSells;
         generateReport();
         setIsModal2Visible(false);
-       // statusUpdated.buyStatus = [...(statusUpdated.buyStatus??[]),valueCheck];
-       // console.log(statusUpdated);
-        //setSells(statusUpdated);
+
+        if(statusName === "entregado")
+        {
+          sendEmail(_userName, _correo);
+        }
+
         message.success("Ticket actualizado exitosamente.");
       }
     );
@@ -154,7 +170,7 @@ export default function ListSellsByBusiness() {
             ver detalle
           </Button>
           <Button
-            onClick={() => onHandleClickUpdate(data.ticketid, data.buystatus)}
+            onClick={() => onHandleClickUpdate(data.ticketid, data.buystatus, data.nombres, data.correo)}
           >
             Actualizar
           </Button>
