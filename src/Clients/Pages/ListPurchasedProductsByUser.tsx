@@ -116,6 +116,11 @@ export default function ListPurchasedProductsByUser() {
       dataIndex: "total",
       key: "total",
     },
+    {
+      title: "Observación",
+      dataIndex: "observations",
+      key: "observations",
+    },
   ];
 
   return (

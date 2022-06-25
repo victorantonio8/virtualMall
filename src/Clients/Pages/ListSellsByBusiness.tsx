@@ -232,6 +232,11 @@ export default function ListSellsByBusiness() {
       dataIndex: "total",
       key: "total",
     },
+    {
+      title: "Observación",
+      dataIndex: "observations",
+      key: "observations",
+    },
   ];
 
   return (
