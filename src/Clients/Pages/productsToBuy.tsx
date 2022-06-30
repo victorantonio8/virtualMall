@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { addSellByUser, deleteProductsInCart, getProductToBuy, getRowId, getTicketId } from "../../api/productsApi";
+import {
+  addSellByUser,
+  deleteProductsInCart,
+  getProductToBuy,
+  getRowId,
+  getTicketId,
+} from "../../api/productsApi";
 import {
   Image,
   Descriptions,
@@ -21,6 +27,9 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { sells } from "../Models/sellsModel";
+import { getUserAndEmail } from "../../api/userApi";
+
+
 
 export default function ProductsToBuy() {
   const _usuarioId = localStorage.getItem("myUser");
@@ -29,8 +38,10 @@ export default function ProductsToBuy() {
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const history = useHistory();
-  const[rowId, setrowId] = useState<number>(0);
-  const[ticket, setTicket] = useState<number>(0);
+  const [rowId, setrowId] = useState<number>(0);
+  const [ticket, setTicket] = useState<number>(0);
+  const [userName, setUserName] = useState<String>();
+  const [correo, setCorreo] = useState<String>();
 
   let totalPagar = 0;
 
@@ -45,18 +56,24 @@ export default function ProductsToBuy() {
     });
   }, [_usuarioId]);
 
+  useEffect(() => {
+    getUserAndEmail(_usuarioId as string).then((result) => {
+      setUserName(result["nombres"]);
+      setCorreo(result["correo"]);
+    });
+  }, []);
 
   useEffect(() => {
-    getRowId().then((result) =>{
+    getRowId().then((result) => {
       setrowId(result);
     });
-   },[]);
+  }, []);
 
- useEffect(() => {
-  getTicketId().then((result) =>{
-    setTicket(result);
-  });
- },[]);
+  useEffect(() => {
+    getTicketId().then((result) => {
+      setTicket(result);
+    });
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -73,17 +90,19 @@ export default function ProductsToBuy() {
         total: result["total"],
         idProduct: result["idproduct"],
         size: result["size"],
-        observations: result ["observations"],
+        observations: result["observations"],
         usuarioId: _usuarioId,
         rowId: rowId,
         ticketId: ticket,
-        buyStatus:"pago recibido",
+        buyStatus: "pago recibido",
       } as sells;
 
       addSellByUser(_cart as sells).then((data) => {});
     });
     setTicket(0);
     setrowId(0);
+
+    
     message.success("El pago fue hecho exitosamente");
     history.push("/");
   };
@@ -96,7 +115,7 @@ export default function ProductsToBuy() {
     const idProduct = values["idproduct"];
     const usuarioId = values["usuarioid"];
 
-    deleteProductsInCart(idProduct,usuarioId).then((data) => {
+    deleteProductsInCart(idProduct, usuarioId).then((data) => {
       message.success("Producto eliminado del carrito exitosamente");
       setProducts(data);
 
@@ -105,7 +124,6 @@ export default function ProductsToBuy() {
       });
       setPagar(totalPagar);
     });
-
   };
 
   return (

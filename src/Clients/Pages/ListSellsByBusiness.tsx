@@ -21,9 +21,7 @@ import { utils, writeFile } from "xlsx";
 import type { RadioChangeEvent } from "antd";
 import { reportSells } from "../Models/sellsModel";
 
-import email from "@emailjs/browser";
-import { sendEmail } from "../../api/emailKey";
-
+import { sendEmail, sendEmailModified } from "../../api/emailKey";
 
 export default function ListSellsByBusiness() {
   const [sells, setSells] = useState<any | null>();
@@ -83,7 +81,12 @@ export default function ListSellsByBusiness() {
     });
   };
 
-  const onHandleClickUpdate = (ticketId: number, prevStatus: string, userName: string, correo: string) => {
+  const onHandleClickUpdate = (
+    ticketId: number,
+    prevStatus: string,
+    userName: string,
+    correo: string
+  ) => {
     setTicket(ticketId);
     setValueCheck(prevStatus);
     setUserName(userName);
@@ -104,25 +107,21 @@ export default function ListSellsByBusiness() {
   };
 
   const handleOkUpdate = () => {
-
     let statusName = valueCheck as string;
     let ticketNumber = ticket as number;
     let _userName = userName as string;
     let _correo = correo as string;
 
-    updateTicketStatus(ticketNumber, statusName).then(
-      (result) => {
-        generateReport();
-        setIsModal2Visible(false);
+    updateTicketStatus(ticketNumber, statusName).then((result) => {
+      generateReport();
+      setIsModal2Visible(false);
 
-        if(statusName === "entregado")
-        {
-          sendEmail(_userName, _correo);
-        }
-
-        message.success("Ticket actualizado exitosamente.");
+      if (statusName === "entregado") {
+        sendEmail(_userName, _correo);
       }
-    );
+
+      message.success("Ticket actualizado exitosamente.");
+    });
   };
 
   const columns: ColumnsType<any> = [
@@ -170,7 +169,14 @@ export default function ListSellsByBusiness() {
             ver detalle
           </Button>
           <Button
-            onClick={() => onHandleClickUpdate(data.ticketid, data.buystatus, data.nombres, data.correo)}
+            onClick={() =>
+              onHandleClickUpdate(
+                data.ticketid,
+                data.buystatus,
+                data.nombres,
+                data.correo
+              )
+            }
           >
             Actualizar
           </Button>

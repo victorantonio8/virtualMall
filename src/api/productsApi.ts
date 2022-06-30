@@ -35,7 +35,9 @@ export async function getProductsByBusiness(businessId: string) {
     )
     .eq("idBusiness", businessId)
     .eq("products.status", true)
-    .order("orderBy",{ ascending: true });
+    .order("orderBy",{ ascending: true })
+    .order("name",{ascending: true, foreignTable:"products"});
+
   return data;
 }
 

@@ -12,3 +12,12 @@ export async function GetUserByLogin(usuario: string, password: string) {
 export async function createUser(usuario: any) {
   const { data, error } = await supabaseClient.from("usuarios").insert(usuario);
 }
+
+export async function getUserAndEmail(usuarioId: string){
+  const{data, error} = await supabaseClient
+  .from("usuarios")
+  .select("*")
+  .eq("id", usuarioId);
+
+  return data ? data[0]:{};
+}
