@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
   Input,
+  Rate,
 } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useState } from "react";
@@ -43,6 +44,22 @@ export default function ProductsByBusiness() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [personalize, setPersonalize] = useState<boolean>(false);
   const [selectedProductId, setSelectedProductId] = useState("");
+  const [legend, setLegend] = useState<String>("");
+  const fivePoints = "86eff8ab-ce82-4bd5-bf16-4b540d24d166";
+  const sweetPoint504 = "b26a47be-fdad-42fd-81f6-c56a561d7596";
+
+  useEffect(() => {
+    setLegend("");
+    if (businessId === fivePoints) {
+      setLegend(
+        "Aviso: para las tallas XL, 2XL Y 3XL hay un incremento del 10% al precio del producto."
+      );
+    } else if (businessId === sweetPoint504) {
+      setLegend(
+        "Aviso: para los tamaños de 16prs y 20prs hay un incremento del 10% al precio del producto."
+      );
+    }
+  });
 
   useEffect(() => {
     getProductsByBusiness(businessId).then((data) => {
@@ -67,7 +84,6 @@ export default function ProductsByBusiness() {
   };
 
   const onChangeInputPersonalizar = (value: any) => {
-    console.log(value.target.value);
     setPersonalizacion(value.target.value);
   };
 
@@ -87,7 +103,9 @@ export default function ProductsByBusiness() {
     setIsModalVisible(false);
   };
 
-  const onclickAddCart = (id: string) => {
+  const onclickAddCart = (id: string, price: number) => {
+    let _price = 0;
+    let amountTenPercent = price * 0.1 + price;
     if (quantity === undefined || quantity === 0) {
       message.info("la cantidad debe ser mayor a 0");
       return;
@@ -98,8 +116,21 @@ export default function ProductsByBusiness() {
       return;
     }
 
+    if (
+      size === "XL" ||
+      size === "2XL" ||
+      size === "3XL" ||
+      size === "16prs" ||
+      size === "20prs"
+    ) {
+      _price = amountTenPercent;
+    } else {
+      _price = price;
+    }
+
     const _cars = {
       quantity: quantity,
+      price: _price,
       idProduct: id,
       usuarioId: _usuarioId,
       size: size,
@@ -110,6 +141,8 @@ export default function ProductsByBusiness() {
       message.success("Producto agregado al carrito");
       setIsModalVisible(false);
       setCarProduct(carproduct + quantity);
+      setPersonalizacion("");
+      setPersonalize(false);
     });
   };
 
@@ -120,26 +153,36 @@ export default function ProductsByBusiness() {
     <>
       {products && (
         <div>
-          <div style={{ display: "flex", justifyContent: "end" }}>
+          <div style={{ width: "100%" }}>
             <div
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                height: "50px",
-                backgroundColor: "deepSkyBlue",
+                display: "inline-block",
+                float: "left",
+                paddingTop: "15px",
+              }}
+            >
+              {legend}
+            </div>
+            <div
+              style={{
+                display: "block",
+                float: "right",
+                height: "60px",
+                width:"60px",
+                paddingLeft:"8px",
+                backgroundColor: "lightGreen",
               }}
             >
               <strong style={{ fontSize: 22 }}>{carproduct}</strong>
 
-              <span>
+              <span style={{paddingBottom:"10px"}}>
                 <Avatar
                   size={64}
                   shape="square"
                   style={{
-                    verticalAlign: "middle",
                     backgroundColor: "transparent",
                     color: "black",
-                    height: "60px",
+                    height: "70px",
                     width: "35px",
                   }}
                   icon={<ShoppingCartOutlined onClick={onClickBuy} />}
@@ -147,6 +190,8 @@ export default function ProductsByBusiness() {
               </span>
             </div>
           </div>
+
+          <div style={{ height: "60px" }}></div>
 
           {products.map((category, index) => (
             <Collapse bordered={false} key={category.id} defaultActiveKey={[0]}>
@@ -250,31 +295,47 @@ export default function ProductsByBusiness() {
                                     if (personalize) {
                                       showModal();
                                     } else {
-                                      onclickAddCart(product.id);
+                                      onclickAddCart(product.id, product.price);
                                     }
                                   }}
                                 />
                               }
                             ></Button>
-                            <Modal
-                              title="Personalización Gratis"
-                              visible={isModalVisible}
-                              onOk={() => onclickAddCart(selectedProductId)}
-                              onCancel={handleCancel}
-                            >
-                              <p>
-                                Ejemplo en Camisa: Real Madrid - Talla S -
-                                Victor Mendez #10 
-                              </p>
-                              <p>Ejemplo en Pastel: Feliz
-                                cumpleaños Margarita</p>
-                              <Input
-                                onChange={onChangeInputPersonalizar}
-                                id={"inputPersonalizar"}
-                                placeholder="ingrese su personalización totalmente gratis"
-                              />
-                            </Modal>
                           </span>
+                          <div style={{ textAlign: "center" }}>
+                            <Rate
+                              disabled
+                              allowHalf
+                              defaultValue={
+                                product?.rates && product.rates.length > 0
+                                  ? product.rates.reduce(
+                                      (prev, current) => current.stars + prev,
+                                      0
+                                    ) / product.rates.length
+                                  : 0
+                              }
+                            />
+                          </div>
+
+                          <Modal
+                            title="Personalización Gratis"
+                            visible={isModalVisible}
+                            onOk={() =>
+                              onclickAddCart(selectedProductId, product.price)
+                            }
+                            onCancel={handleCancel}
+                          >
+                            <p>
+                              Ejemplo en Camisa: Real Madrid - Talla S - Victor
+                              Mendez #10
+                            </p>
+                            <p>Ejemplo en Pastel: Feliz cumpleaños Margarita</p>
+                            <Input
+                              onChange={onChangeInputPersonalizar}
+                              id={"inputPersonalizar"}
+                              placeholder="ingrese su personalización totalmente gratis"
+                            />
+                          </Modal>
                         </div>
                       </div>
                     </Card>

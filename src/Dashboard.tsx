@@ -48,6 +48,11 @@ export default function Dashboard({ children }: DashboardProps) {
         icon: <StarOutlined style={{ fontSize: "16px" }} />,
       },
       {
+        key: "purchasedProducts",
+        label: <NavLink to={"/purchasedProducts"}>Mis Compras</NavLink>,
+        icon: <PicCenterOutlined style={{ fontSize: "16px" }} />,
+      },
+      {
         key: "newsByBusiness",
         label: <NavLink to={"/newsByBusiness"}>Noticias</NavLink>,
         icon: <PicCenterOutlined style={{ fontSize: "16px" }} />,

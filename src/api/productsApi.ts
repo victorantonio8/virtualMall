@@ -2,8 +2,10 @@ import supabaseClient from "../supabaseClient";
 import { CreateProduct, Product } from "../Clients/Models/productModel";
 import { Comment } from "antd";
 import { cars } from "../Clients/Models/carsModel";
-import { sells } from "../Clients/Models/sellsModel";
+import { reportSells, sells } from "../Clients/Models/sellsModel";
 import { RcFile } from "antd/lib/upload";
+import { rates } from "../Clients/Models/rateModel";
+
 
 export async function getProductsByBusiness(businessId: string) {
   const { data, error } = await supabaseClient
@@ -24,13 +26,32 @@ export async function getProductsByBusiness(businessId: string) {
                 price,
                 idCategory,
                 idBusiness,
-                sizes
+                sizes,
+                rates(
+                  stars
+                )
             )
         `
     )
-    .eq("idBusiness", businessId);
+    .eq("idBusiness", businessId)
+    .eq("products.status", true)
+    .order("orderBy",{ ascending: true })
+    .order("name",{ascending: true, foreignTable:"products"});
 
   return data;
+}
+
+export async function getRateOfUser(_usuarioId: string, _productId:string) {
+  const { data, error } = await supabaseClient
+    .from("rates")
+    .select("stars")
+    .match({usuarioId: _usuarioId, productId:_productId});
+
+    let result = 0;
+    if (data) {
+      result = data[0].stars as any;
+    }
+    return result as number;
 }
 
 export async function getProductById(
@@ -52,6 +73,9 @@ export async function getProductById(
                     idCategory,
                     idBusiness,
                     sizes,
+                    rates(
+                      stars
+                    ),
                     comments(
                       id,
                       description,
@@ -69,7 +93,6 @@ export async function getProductById(
   if (error) {
     return null;
   }
-
   return data?.[0] as Product;
 }
 
@@ -126,6 +149,26 @@ export async function getProductToBuy(usuarioId: string) {
   }
 
   return result;
+}
+
+export async function getRowId() {
+  const { data, error } = await supabaseClient.rpc("get_row_id");
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result as number;
+}
+
+export async function getTicketId() {
+  const { data, error } = await supabaseClient.rpc("get_ticket_id");
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result as number;
 }
 
 export async function addSellByUser(product: sells) {
@@ -194,7 +237,8 @@ export async function getProductsByUser() {
             urlPicture
         `
     )
-    .eq("idBusiness", idBusiness);
+    .eq("idBusiness", idBusiness)
+    .eq("status",true);
 
   return data ?? [];
 }
@@ -250,8 +294,8 @@ export async function createProduct(product: CreateProduct) {
   });
 }
 
-export async function deleteProduct(id: string) {
-  await supabaseClient.from("products").delete().match({ id });
+export async function deleteProduct(_id: string) {
+  await supabaseClient.from("products").update({status:false}).match({ id:_id });
 }
 
 export async function getSellsByBusiness(
@@ -270,6 +314,29 @@ export async function getSellsByBusiness(
   }
 
   return result;
+}
+
+export async function getPurchasedProductsByUser(
+  usuarioId: string
+) {
+  const { data, error } = await supabaseClient.rpc("get_purchased_by_user", {
+    _usuarioid : usuarioId,
+  });
+  let result = 0;
+  if (data) {
+    result = data as any;
+  }
+
+  return result;
+}
+
+export async function getDetailByTicket(ticketId: number) {
+  const { data, error } = await supabaseClient
+    .from("sells")
+    .select("*")
+    .eq("ticketId", ticketId);
+
+  return data;
 }
 
 export async function fetchProductById(id: string) {
@@ -323,4 +390,32 @@ export async function updateProduct(id: string, product: CreateProduct) {
       idBusiness,
     })
     .match({ id });
+}
+
+export async function addRateToProduct(rates:rates) {
+  debugger;
+  const { data, error } = await supabaseClient
+    .from("rates")
+    .select("stars")
+    .match({ productId: rates.productId, usuarioId: rates.usuarioId });
+
+  if (data?.length === 0) {
+    const { data, error } = await supabaseClient.from("rates").insert(rates);
+    return data;
+  } else {
+    const { data, error } = await supabaseClient
+      .from("rates")
+      .update({ stars: rates.stars })
+      .match({ productId: rates.productId, usuarioId: rates.usuarioId });
+    return data;
+  }
+  
+}
+
+export async function updateTicketStatus(_ticketId:number, _buystatus:string) {
+  const { data, error } = await supabaseClient
+  .from("sells")
+  .update({ buyStatus: _buystatus })
+  .match({ ticketId: _ticketId});
+return data;
 }

@@ -1,16 +1,48 @@
 import { useState } from "react";
-import { Space, Table, Row, Col, DatePicker, Button, message } from "antd";
+import {
+  Space,
+  Table,
+  Row,
+  Col,
+  DatePicker,
+  Button,
+  message,
+  Modal,
+  Radio,
+} from "antd";
 import type { DatePickerProps } from "antd";
 import { ColumnsType } from "antd/lib/table";
-import { getSellsByBusiness } from "../../api/productsApi";
+import {
+  getSellsByBusiness,
+  getDetailByTicket,
+  updateTicketStatus,
+} from "../../api/productsApi";
 import { utils, writeFile } from "xlsx";
+import type { RadioChangeEvent } from "antd";
+import { reportSells } from "../Models/sellsModel";
+
+import { sendEmail, sendEmailModified } from "../../api/emailKey";
 
 export default function ListSellsByBusiness() {
-  const [sells, setSells] = useState<any[]>([]);
+  const [sells, setSells] = useState<any | null>();
   const [dateI, setDateI] = useState<String>();
   const [dateF, setDateF] = useState<String>();
   const idBusiness = localStorage.getItem("idBusiness");
   const [loading, setLoading] = useState(false);
+  const [detail, setDetail] = useState<any[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModal2Visible, setIsModal2Visible] = useState(false);
+  const [valueCheck, setValueCheck] = useState<String>();
+  const [ticket, setTicket] = useState<Number>();
+  const [userName, setUserName] = useState<String>();
+  const [correo, setCorreo] = useState<String>();
+
+  const plainOptions = [
+    { label: "Pago recibido", value: "pago recibido" },
+    { label: "Preparando compra", value: "preparando compra" },
+    { label: "En camino", value: "en camino" },
+    { label: "Entregado", value: "entregado" },
+  ];
 
   const onChangeDateI: DatePickerProps["onChange"] = (date, dateString) => {
     setDateI(dateString);
@@ -22,7 +54,7 @@ export default function ListSellsByBusiness() {
 
   const generateReport = () => {
     setLoading(true);
-    setSells([]);
+    //setSells([]);
     getSellsByBusiness(dateI as String, dateF as String, idBusiness as string)
       .then((data) => {
         setSells(data as any);
@@ -42,41 +74,76 @@ export default function ListSellsByBusiness() {
     }
   };
 
+  const onHandleClick = (value: number) => {
+    getDetailByTicket(value).then((result) => {
+      setDetail(result as any);
+      setIsModalVisible(true);
+    });
+  };
+
+  const onHandleClickUpdate = (
+    ticketId: number,
+    prevStatus: string,
+    userName: string,
+    correo: string
+  ) => {
+    setTicket(ticketId);
+    setValueCheck(prevStatus);
+    setUserName(userName);
+    setCorreo(correo);
+    setIsModal2Visible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel2 = () => {
+    setIsModal2Visible(false);
+  };
+
+  const onChangeCheck = ({ target: { value } }: RadioChangeEvent) => {
+    setValueCheck(value);
+  };
+
+  const handleOkUpdate = () => {
+    let statusName = valueCheck as string;
+    let ticketNumber = ticket as number;
+    let _userName = userName as string;
+    let _correo = correo as string;
+
+    updateTicketStatus(ticketNumber, statusName).then((result) => {
+      generateReport();
+      setIsModal2Visible(false);
+
+      if (statusName === "entregado") {
+        sendEmail(_userName, _correo);
+      }
+
+      message.success("Ticket actualizado exitosamente.");
+    });
+  };
+
   const columns: ColumnsType<any> = [
     {
-      title: "Producto",
-      dataIndex: "productname",
-      key: "productname",
+      title: "# Ticket",
+      dataIndex: "ticketid",
+      key: "ticketid",
     },
     {
-      title: "Tamaño",
-      dataIndex: "size",
-      key: "size",
-    },
-    {
-      title: "Precio",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Cantidad Vendida",
+      title: "Cantidad",
       dataIndex: "quantity",
       key: "quantity",
     },
     {
       title: "Total",
-      key: "total",
       dataIndex: "total",
+      key: "total",
     },
     {
       title: "Fecha",
-      key: "created_at",
-      dataIndex: "created_at",
-    },
-    {
-      title: "Observaciones",
-      key: "observations",
-      dataIndex: "observations",
+      key: "fecha",
+      dataIndex: "fecha",
     },
     {
       title: "Cliente",
@@ -87,6 +154,94 @@ export default function ListSellsByBusiness() {
       title: "Contacto",
       key: "telefono",
       dataIndex: "telefono",
+    },
+    {
+      title: "Status",
+      key: "buystatus",
+      dataIndex: "buystatus",
+    },
+    {
+      title: "Acción",
+      key: "action",
+      render: (_, data) => (
+        <Space size="middle">
+          <Button onClick={() => onHandleClick(data.ticketid)}>
+            ver detalle
+          </Button>
+          <Button
+            onClick={() =>
+              onHandleClickUpdate(
+                data.ticketid,
+                data.buystatus,
+                data.nombres,
+                data.correo
+              )
+            }
+          >
+            Actualizar
+          </Button>
+          <Modal
+            title="Detalle de los productos"
+            visible={isModalVisible}
+            onCancel={handleCancel}
+          >
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Table
+                style={{ width: "100%" }}
+                columns={columnsDetails}
+                dataSource={detail}
+                loading={loading}
+                rowKey="id"
+              />
+            </div>
+          </Modal>
+          <Modal
+            title="Actualizar Status"
+            width={600}
+            visible={isModal2Visible}
+            onOk={handleOkUpdate}
+            onCancel={handleCancel2}
+          >
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Radio.Group
+                options={plainOptions}
+                onChange={onChangeCheck}
+                value={valueCheck}
+                optionType="button"
+                buttonStyle="solid"
+              />
+            </div>
+          </Modal>
+        </Space>
+      ),
+    },
+  ];
+
+  const columnsDetails: ColumnsType<any> = [
+    {
+      title: "Producto",
+      dataIndex: "productName",
+      key: "productName",
+    },
+    {
+      title: "Precio",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
+    },
+    {
+      title: "Observación",
+      dataIndex: "observations",
+      key: "observations",
     },
   ];
 
@@ -133,7 +288,7 @@ export default function ListSellsByBusiness() {
               columns={columns}
               dataSource={sells}
               loading={loading}
-              rowKey="report_id"
+              rowKey="ticketid"
             />
           </div>
         </Col>

@@ -64,3 +64,12 @@
   height: 5%;
   font-weight: bold;
 }
+
+.ant-comment-content-detail{
+  font-size: 20px;
+}
+
+.ant-comment-content-author > .ant-comment-content-author-name, 
+.ant-comment-content-author > .ant-comment-content-author-time {
+  font-size: 16px;
+}

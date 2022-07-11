@@ -1,5 +1,6 @@
 import { Comment } from "./commentModel";
 import type { RcFile } from "antd/es/upload/interface";
+import { rates } from "./rateModel";
 
 export interface Product {
   id: string;
@@ -14,6 +15,7 @@ export interface Product {
   idCategory: string;
   idBusiness: string;
   sizes: string[];
+  rates?: rates[];
   comments?: Comment[];
 }
 
