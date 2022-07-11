@@ -1,4 +1,4 @@
-import { supabaseClient } from "../supabaseClient";
+import supabaseClient from "../supabaseClient";
 import { CreateProduct, Product } from "../Clients/Models/productModel";
 import { Comment } from "antd";
 import { cars } from "../Clients/Models/carsModel";

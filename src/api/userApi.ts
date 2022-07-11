@@ -1,4 +1,4 @@
-import { supabaseClient } from "../supabaseClient";
+import supabaseClient from "../supabaseClient";
 
 export async function GetUserByLogin(usuario: string, password: string) {
   const { data, error } = await supabaseClient

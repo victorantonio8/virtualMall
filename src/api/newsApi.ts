@@ -1,4 +1,4 @@
-import { supabaseClient } from "../supabaseClient";
+import supabaseClient from "../supabaseClient";
 import { uploadImage } from "./productsApi";
 
 export async function getNewsByBusiness() {
